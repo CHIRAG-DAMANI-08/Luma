@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  clerkId            String    @unique
+  email             String    @unique
+  name              String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Profile information
+  profile           Profile?
+  chatSessions      ChatSession[]
+  messages          Message[]
+  
+  // Authentication
+  lastLoginAt       DateTime?
+  
+  // Relations
+  moodEntries      MoodEntry[]
+  activities       UserActivity[]
+  
+  @@map("users")
+}
+
+model Profile {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Personal Information
+  nickname          String?
+  pronouns          String?
+  preferredLanguage String    @default("en")
+  timezone          String    @default("UTC")
+  
+  // Health Information
+  medicalConditions String?
+  currentMedications String?
+  therapyExperience  String?
+  comfortLevel       Int       @default(3)
+  
+  // Goals and Preferences
+  goals             String?
+  checkInFrequency  String    @default("few_times_week")
+  
+  // Privacy Settings
+  dataSharingEnabled Boolean   @default(true)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  @@map("profiles")
+}
+
+model ChatSession {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  messages         Message[]
+  
+  @@map("chat_sessions")
+}
+
+model Message {
+  id                String    @id @default(cuid())
+  sessionId         String
+  session           ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Message content
+  content           String
+  role              String    // 'user' or 'assistant'
+  
+  // Metadata
+  metadata          Json?
+  
+  createdAt         DateTime  @default(now())
+  
+  @@index([sessionId])
+  @@index([userId])
+  @@map("messages")
+}
+
+// For future features
+model MoodEntry {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  mood              Int       // 1-5 scale
+  notes            String?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  @@index([userId])
+  @@map("mood_entries")
+}
+
+// For tracking user engagement and feature usage
+model UserActivity {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  activityType      String    // e.g., 'login', 'chat_started', 'feature_used', etc.
+  metadata         Json?      // Additional data about the activity
+  
+  createdAt         DateTime  @default(now())
+  
+  @@index([userId])
+  @@index([activityType])
+  @@map("user_activities")
+}

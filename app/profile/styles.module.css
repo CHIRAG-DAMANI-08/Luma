@@ -1,0 +1,425 @@
+/* Profile page styles - white background, pink card, black text */
+
+/* Page container - full viewport override */
+.container {
+  position: fixed;
+  inset: 0;                 /* top:0; right:0; bottom:0; left:0 */
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;       /* reduced top padding to move up */
+  background: #ffffff !important; /* white background - override parent */
+  box-sizing: border-box;
+  font-family: 'Lexend', 'Noto Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  overflow: auto;           /* allow internal scrolling */
+  margin: 0;                /* remove any outer spacing */
+  z-index: 50;              /* put above parent background */
+}
+
+/* Card / form wrapper - pink card with more breathing room */
+.formWrapper {
+  width: 100%;
+  max-width: 720px;
+  background: #f7eaf0; /* pink card background */
+  border-radius: 14px;
+  padding: 3rem 2.5rem;     /* increased padding for more space */
+  box-shadow: 0 18px 40px rgba(16,24,40,0.08), 0 6px 12px rgba(16,24,40,0.04);
+  border: 1px solid rgba(0,0,0,0.03);
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+/* Heading area - black text with more spacing */
+.pageTitle {
+  margin: 0 0 1rem 0;       /* increased bottom margin */
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #000000; /* black text */
+  text-align: center;
+}
+
+.pageSubtitle {
+  margin: 0 0 2.5rem 0;     /* increased bottom margin */
+  color: #000000; /* black text */
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Avatar + update row with more spacing */
+.avatarRow {
+  display: flex;
+  gap: 1.5rem;              /* increased gap */
+  align-items: center;
+  margin-bottom: 2.5rem;    /* increased bottom margin */
+  padding-bottom: 1.5rem;   /* add padding */
+  border-bottom: 1px solid rgba(0,0,0,0.1); /* subtle separator */
+}
+
+.avatarWrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 9999px;
+  background: #ffffff; /* white avatar background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+}
+
+.avatarInitial {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ef4399; /* pink avatar initial */
+}
+
+.avatarEditBtn {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  background: #ef4399;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(2,6,23,0.08);
+}
+
+/* Mobile devices - position icon further right and lower */
+@media (max-width: 768px) {
+  .avatarEditBtn {
+    right: -12px;
+    bottom: -12px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Very small mobile devices */
+@media (max-width: 480px) {
+  .avatarEditBtn {
+    right: -15px;
+    bottom: -15px;
+    width: 30px;
+    height: 30px;
+  }
+  
+  .avatarEditBtn svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.avatarTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000000; /* black text */
+  margin: 0 0 0.5rem 0;     /* increased bottom margin */
+}
+
+.avatarDesc {
+  font-size: 0.875rem;
+  color: #000000; /* black text */
+  margin: 0;
+}
+
+/* Avatar image to fit circle properly */
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Form grid with more spacing */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;              /* increased gap */
+  margin-bottom: 2rem;      /* increased bottom margin */
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;             /* increased gap */
+}
+
+/* Form labels - black text */
+.formLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #000000; /* black text */
+}
+
+/* Inputs - white background, black text */
+.formInput {
+  width: 100%;
+  padding: 0.875rem 1rem;   /* increased padding */
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  background: #ffffff; /* white input background */
+  font-size: 14px;
+  color: #000000; /* black text */
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+  box-sizing: border-box;
+}
+
+.formInput:focus {
+  border-color: rgba(239,67,153,0.35);
+  box-shadow: 0 6px 18px rgba(239,67,153,0.08);
+}
+
+/* Disabled input styling */
+.formInput:disabled {
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Full width single column items */
+.fullWidth {
+  grid-column: 1 / -1;
+  margin-bottom: 1rem;      /* add spacing */
+}
+
+/* Reset password CTA - white background, black text */
+.resetPassword {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.875rem 1rem;   /* increased padding */
+  border-radius: 8px;
+  border: 1px solid #ececec;
+  background: #ffffff; /* white background */
+  color: #000000; /* black text */
+  text-decoration: none;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
+  margin-bottom: 2rem;      /* add bottom spacing */
+}
+
+.resetPassword:hover {
+  background: #fafafa;
+  border-color: #eee0ee;
+}
+
+/* Section headers - black text with more spacing */
+.sectionTitle {
+  font-size: 16px;          /* slightly larger */
+  font-weight: 700;
+  margin-top: 2.5rem;       /* increased top margin */
+  margin-bottom: 1.5rem;    /* increased bottom margin */
+  color: #000000; /* black text */
+  padding-top: 1.5rem;      /* add padding */
+  border-top: 1px solid rgba(0,0,0,0.1); /* subtle separator */
+}
+
+.sectionTitle:first-of-type {
+  border-top: none;         /* remove border from first section */
+  padding-top: 0;
+}
+
+.sectionDesc {
+  font-size: 13px;
+  color: #000000; /* black text */
+  margin-bottom: 1.5rem;    /* increased margin */
+}
+
+/* Preference items with more spacing */
+.preferenceItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;    /* increased spacing */
+  padding: 0.75rem 0;       /* add vertical padding */
+}
+
+.preferenceLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #000000; /* black text */
+  margin: 0 0 0.5rem 0;     /* increased bottom margin */
+}
+
+.preferenceDesc {
+  font-size: 0.75rem;
+  color: #000000; /* black text */
+  margin: 0;
+}
+
+.toggleContainer {
+  cursor: pointer;
+}
+
+/* Hide the actual checkbox input */
+.toggleContainer input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Toggle switch */
+.toggleSwitch {
+  width: 48px;
+  height: 28px;
+  background: #e9e9e9;
+  border-radius: 9999px;
+  position: relative;
+  display: inline-block;
+}
+
+.toggleSwitchChecked {
+  background: linear-gradient(90deg,#ef4399,#f7a8d0);
+}
+
+.toggleSwitchCircle {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 9999px;
+  transition: transform .18s ease;
+  box-shadow: 0 4px 8px rgba(2,6,23,0.08);
+}
+
+.toggleSwitchCircleChecked {
+  transform: translateX(20px);
+}
+
+/* select/textarea - white background, black text with more spacing */
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;   /* increased padding */
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  background: #ffffff; /* white background */
+  color: #000000; /* black text */
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 1.5rem;    /* add spacing */
+}
+
+/* Primary button - pink background, black text with more spacing */
+.btnPrimary {
+  display: inline-block;
+  width: 100%;
+  padding: 1rem 1.25rem;    /* increased padding */
+  border-radius: 8px;
+  background: #d9bfd6; /* soft lilac matching screenshot */
+  color: #000000; /* black text */
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(208,79,153,0.08);
+  transition: transform .12s ease, box-shadow .12s ease;
+  margin-top: 2rem;         /* add top spacing */
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(208,79,153,0.12);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Secondary button - black text */
+.btnSecondary {
+  display: inline-block;
+  padding: 0.875rem 1rem;   /* increased padding */
+  border-radius: 8px;
+  background: transparent;
+  color: #000000; /* black text */
+  border: 1px solid #e6e6e6;
+  cursor: pointer;
+}
+
+/* Footer link - black text with more spacing */
+.backLink {
+  display: block;
+  text-align: center;
+  margin-top: 2rem;         /* increased top margin */
+  color: #000000; /* black text */
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.backLink:hover {
+  color: #ef4399; /* pink on hover */
+}
+
+/* small utilities */
+.spaceY { gap: 1.5rem; }   /* increased gap */
+
+/* Responsive */
+@media (max-width: 860px) {
+  .container {
+    padding: 1.5rem 1rem;  /* adjust mobile padding */
+  }
+  
+  .formWrapper {
+    padding: 2rem 1.5rem;  /* adjust mobile padding */
+  }
+  
+  .formGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;          /* slightly smaller gap on mobile */
+  }
+  
+  .avatarRow {
+    justify-content: center;
+    text-align: center;
+    gap: 1rem;             /* smaller gap on mobile */
+    flex-direction: column;
+  }
+  
+  .avatarEditBtn {
+    right: 6px;
+    bottom: 6px;
+  }
+}
+
+/* Success message styling */
+.successMessage {
+  color: #22c55e;
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Loading spinner for upload button */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

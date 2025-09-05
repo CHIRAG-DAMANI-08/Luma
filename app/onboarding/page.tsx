@@ -7,9 +7,7 @@ import { useForm, useFormContext, FormProvider, Controller } from "react-hook-fo
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import styles from "./onboarding.module.css";
 
-// Shadcn Components
 // Shadcn Components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,10 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DocumentUpload } from "@/components/document-upload";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-// Form schemas for each step
+// Form schemas
 const personalInfoSchema = z.object({
   nickname: z.string().min(2, "Nickname must be at least 2 characters").max(30),
   pronouns: z.string().optional(),
@@ -45,14 +42,7 @@ const goalsSchema = z.object({
   checkInFrequency: z.enum(["daily", "few_times_week", "weekly", "as_needed"]),
 });
 
-const documentSchema = z.object({
-  documentUrl: z.string().optional(),
-});
-
-const formSchema = personalInfoSchema
-  .merge(healthInfoSchema)
-  .merge(goalsSchema)
-  .merge(documentSchema);
+const formSchema = personalInfoSchema.merge(healthInfoSchema).merge(goalsSchema);
 
 type FormData = {
   nickname: string;
@@ -65,10 +55,8 @@ type FormData = {
   comfortLevel: number;
   goals: string;
   checkInFrequency: "daily" | "few_times_week" | "weekly" | "as_needed";
-  documentUrl?: string;
 };
 
-// Mock timezones and languages
 const timezones = [
   { value: "UTC-12:00", label: "UTC-12:00" },
   { value: "UTC-08:00", label: "PST (UTC-8)" },
@@ -92,22 +80,22 @@ function PersonalInfoStep() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
-        <p className="text-muted-foreground mb-6">
-          Let's get to know you better. This information helps us personalize
-          your experience.
+        <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--text-primary)' }}>Personal Information</h2>
+        <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
+          Let's get to know you better. This information helps us personalize your experience.
         </p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="nickname" className="block text-sm font-medium mb-1">
+          <label htmlFor="nickname" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             What should we call you? *
           </label>
           <Input
             id="nickname"
             {...register("nickname")}
             placeholder="e.g., Alex"
+            style={{ background: '#fff', color: 'var(--text-primary)' }}
           />
           {errors.nickname && (
             <p className="text-sm text-red-500 mt-1">
@@ -117,18 +105,19 @@ function PersonalInfoStep() {
         </div>
 
         <div>
-          <label htmlFor="pronouns" className="block text-sm font-medium mb-1">
+          <label htmlFor="pronouns" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             Pronouns (optional)
           </label>
           <Input
             id="pronouns"
             {...register("pronouns")}
             placeholder="e.g., they/them, she/her, he/him"
+            style={{ background: '#fff', color: 'var(--text-primary)' }}
           />
         </div>
 
         <div>
-          <label htmlFor="timezone" className="block text-sm font-medium mb-1">
+          <label htmlFor="timezone" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             Timezone *
           </label>
           <Controller
@@ -136,7 +125,7 @@ function PersonalInfoStep() {
             control={control}
             render={({ field }) => (
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger>
+                <SelectTrigger style={{ background: '#fff', color: 'var(--text-primary)' }}>
                   <SelectValue placeholder="Select your timezone" />
                 </SelectTrigger>
                 <SelectContent>
@@ -157,7 +146,7 @@ function PersonalInfoStep() {
         </div>
 
         <div>
-          <label htmlFor="preferredLanguage" className="block text-sm font-medium mb-1">
+          <label htmlFor="preferredLanguage" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             Preferred Language *
           </label>
           <Controller
@@ -165,7 +154,7 @@ function PersonalInfoStep() {
             control={control}
             render={({ field }) => (
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger>
+                <SelectTrigger style={{ background: '#fff', color: 'var(--text-primary)' }}>
                   <SelectValue placeholder="Select your preferred language" />
                 </SelectTrigger>
                 <SelectContent>
@@ -191,28 +180,20 @@ function PersonalInfoStep() {
 
 // Step 2: Health Information
 function HealthInfoStep({ comfortLevel }: { comfortLevel: number }) {
-  const { 
-    control, 
-    register, 
-    formState: { errors }, 
-    setValue 
-  } = useFormContext<FormData>();
+  const { control, register, formState: { errors }, setValue } = useFormContext<FormData>();
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold mb-6">Health Information</h2>
-        <p className="text-muted-foreground mb-6">
+        <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--text-primary)' }}>Health Information</h2>
+        <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
           Share any relevant health information to help us better support you.
         </p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label
-            htmlFor="medicalConditions"
-            className="block text-sm font-medium mb-1"
-          >
+          <label htmlFor="medicalConditions" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             Medical Conditions (optional)
           </label>
           <Textarea
@@ -220,14 +201,12 @@ function HealthInfoStep({ comfortLevel }: { comfortLevel: number }) {
             {...register("medicalConditions")}
             placeholder="e.g., Anxiety, Depression, ADHD"
             rows={3}
+            style={{ background: '#fff', color: 'var(--text-primary)' }}
           />
         </div>
 
         <div>
-          <label
-            htmlFor="currentMedications"
-            className="block text-sm font-medium mb-1"
-          >
+          <label htmlFor="currentMedications" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             Current Medications (optional)
           </label>
           <Textarea
@@ -235,14 +214,12 @@ function HealthInfoStep({ comfortLevel }: { comfortLevel: number }) {
             {...register("currentMedications")}
             placeholder="e.g., Sertraline 50mg daily, Adderall XR 20mg"
             rows={3}
+            style={{ background: '#fff', color: 'var(--text-primary)' }}
           />
         </div>
 
         <div>
-          <label
-            htmlFor="therapyExperience"
-            className="block text-sm font-medium mb-1"
-          >
+          <label htmlFor="therapyExperience" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             Previous Therapy Experience (optional)
           </label>
           <Textarea
@@ -250,12 +227,14 @@ function HealthInfoStep({ comfortLevel }: { comfortLevel: number }) {
             {...register("therapyExperience")}
             placeholder="Tell us about your past therapy experiences, if any"
             rows={3}
+            style={{ background: '#fff', color: 'var(--text-primary)' }}
           />
         </div>
+
         <div className="pt-4">
-          <label className="block text-sm font-medium mb-4">
+          <label className="block text-sm font-medium mb-4" style={{ color: 'var(--text-primary)' }}>
             How comfortable are you discussing mental health?
-            <span className="ml-1 text-muted-foreground">
+            <span className="ml-1" style={{ color: 'var(--text-secondary)' }}>
               ({comfortLevel}/5)
             </span>
           </label>
@@ -273,30 +252,16 @@ function HealthInfoStep({ comfortLevel }: { comfortLevel: number }) {
                     setValue("comfortLevel", num, { shouldValidate: true });
                   }}
                 >
-                  <label className="flex flex-col items-center gap-2">
-                    <RadioGroupItem value="1" />
-                    <span className="text-xs">1</span>
-                  </label>
-                  <label className="flex flex-col items-center gap-2">
-                    <RadioGroupItem value="2" />
-                    <span className="text-xs">2</span>
-                  </label>
-                  <label className="flex flex-col items-center gap-2">
-                    <RadioGroupItem value="3" />
-                    <span className="text-xs">3</span>
-                  </label>
-                  <label className="flex flex-col items-center gap-2">
-                    <RadioGroupItem value="4" />
-                    <span className="text-xs">4</span>
-                  </label>
-                  <label className="flex flex-col items-center gap-2">
-                    <RadioGroupItem value="5" />
-                    <span className="text-xs">5</span>
-                  </label>
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <label key={value} className="flex flex-col items-center gap-2">
+                      <RadioGroupItem value={String(value)} />
+                      <span className="text-xs" style={{ color: 'var(--text-primary)' }}>{value}</span>
+                    </label>
+                  ))}
                 </RadioGroup>
               )}
             />
-            <div className="flex justify-between text-xs text-muted-foreground mt-2">
+            <div className="flex justify-between text-xs mt-2" style={{ color: 'var(--text-secondary)' }}>
               <span>Not comfortable</span>
               <span>Very comfortable</span>
             </div>
@@ -304,26 +269,26 @@ function HealthInfoStep({ comfortLevel }: { comfortLevel: number }) {
         </div>
 
         <div>
-          <p className="text-sm font-medium mb-1">How often would you like to check in? *</p>
-          <label className="block text-sm font-medium mb-1">
-            <Controller
-              name="checkInFrequency"
-              control={control}
-              render={({ field }) => (
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select check-in frequency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="few_times_week">A few times a week</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="as_needed">As needed</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
+          <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
+            How often would you like to check in? *
           </label>
+          <Controller
+            name="checkInFrequency"
+            control={control}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger style={{ background: '#fff', color: 'var(--text-primary)' }}>
+                  <SelectValue placeholder="Select check-in frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">Daily</SelectItem>
+                  <SelectItem value="few_times_week">A few times a week</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="as_needed">As needed</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
         </div>
       </div>
     </div>
@@ -332,24 +297,20 @@ function HealthInfoStep({ comfortLevel }: { comfortLevel: number }) {
 
 // Step 3: Goals
 function GoalsStep() {
-  const {
-    register,
-    formState: { errors },
-    control,
-  } = useFormContext<FormData>();
+  const { register, formState: { errors }, control } = useFormContext<FormData>();
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold mb-6">Your Goals</h2>
-        <p className="text-muted-foreground mb-6">
+        <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--text-primary)' }}>Your Goals</h2>
+        <p className="text-sm mb-6" style={{ color: 'var(--text-secondary)' }}>
           What would you like to achieve through therapy?
         </p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="goals" className="block text-sm font-medium mb-1">
+          <label htmlFor="goals" className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             Your Goals *
           </label>
           <Textarea
@@ -357,6 +318,7 @@ function GoalsStep() {
             {...register("goals")}
             placeholder="e.g., I want to manage my anxiety, improve my relationships, and develop better coping strategies"
             rows={4}
+            style={{ background: '#fff', color: 'var(--text-primary)' }}
           />
           {errors.goals && (
             <p className="text-sm text-red-500 mt-1">{errors.goals.message}</p>
@@ -364,7 +326,7 @@ function GoalsStep() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-primary)' }}>
             How often would you like to check in? *
           </label>
           <Controller
@@ -372,7 +334,7 @@ function GoalsStep() {
             control={control}
             render={({ field }) => (
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger>
+                <SelectTrigger style={{ background: '#fff', color: 'var(--text-primary)' }}>
                   <SelectValue placeholder="Select check-in frequency" />
                 </SelectTrigger>
                 <SelectContent>
@@ -391,15 +353,11 @@ function GoalsStep() {
 }
 
 export default function OnboardingPage() {
-  // Authentication and routing hooks
   const { isLoaded, userId } = useAuth();
   const router = useRouter();
-
-  // State hooks
   const [step, setStep] = useState(1);
-  const totalSteps = 4; // Steps: Personal Info, Health Info, Goals, Documents
+  const totalSteps = 3;
 
-  // Form hooks
   const methods = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -413,28 +371,19 @@ export default function OnboardingPage() {
       comfortLevel: 3,
       goals: "",
       checkInFrequency: "few_times_week",
-      documentUrl: "",
     },
   });
 
   const {
     handleSubmit,
-    formState: { isValid: isFormValid, isSubmitting: isFormSubmitting, errors },
+    formState: { isSubmitting },
     watch,
     setValue,
     trigger,
-    getValues,
   } = methods;
 
   const comfortLevel = watch("comfortLevel");
 
-  const stepFields: Record<number, (keyof FormData)[]> = {
-    1: ["nickname", "timezone", "preferredLanguage"],
-    2: ["comfortLevel", "checkInFrequency"],
-    3: ["goals", "checkInFrequency"],
-    4: [], // Documents step (no required fields here)
-  };
-  // Redirect to sign-in if not authenticated
   useEffect(() => {
     if (isLoaded && !userId) {
       router.push("/sign-in");
@@ -450,36 +399,31 @@ export default function OnboardingPage() {
         },
         body: JSON.stringify(data),
       });
-  
+
       if (!response.ok) {
-        // Try to parse as JSON, but handle non-JSON responses
-        let errorMessage = "Failed to save onboarding data";
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorMessage;
-        } catch (parseError) {
-          // If response is not JSON (e.g., HTML error page)
-          errorMessage = `Server error (${response.status}): Unable to process your request`;
-        }
-        throw new Error(errorMessage);
+        throw new Error("Failed to save onboarding data");
       }
-  
-      // If this is the last step, show success and redirect
-      if (step === totalSteps) {
-        toast.success("Onboarding completed successfully!");
-        router.push("/dashboard");
-      } else {
-        // Move to next step if not the last step
-        setStep(step + 1);
-        window.scrollTo(0, 0);
-      }
+
+      toast.success("Onboarding completed successfully!");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error during form submission:", error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "An error occurred during submission"
-      );
+      toast.error("An error occurred during submission");
+    }
+  };
+
+  const nextStep = async () => {
+    const isValid = await trigger();
+    if (isValid && step < totalSteps) {
+      setStep(step + 1);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const prevStep = () => {
+    if (step > 1) {
+      setStep(step - 1);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -491,92 +435,87 @@ export default function OnboardingPage() {
         return <HealthInfoStep comfortLevel={comfortLevel} />;
       case 3:
         return <GoalsStep />;
-      case 4:
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold">Share Documents</h2>
-              <p className="text-muted-foreground">
-                Upload any important documents you'd like to share with your
-                team
-              </p>
-            </div>
-            <DocumentUpload />
-          </div>
-        );
       default:
         return null;
     }
   };
 
-  // Show loading state while checking authentication
   if (!isLoaded || !userId) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--accent-color)' }}>
         <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 mx-auto mb-4"></div>
-          <p>Loading...</p>
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 mx-auto mb-4" style={{ borderTopColor: 'var(--primary-color)' }}></div>
+          <p style={{ color: 'var(--text-primary)' }}>Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: 'var(--accent-color)' }}>
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold mb-2">Welcome to Luma</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Welcome to Luma</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>
             Let's set up your profile to personalize your experience
           </p>
 
-          {/* Progress indicator */}
-          <div className="w-full bg-muted rounded-full h-2.5 mt-8 mb-12">
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mt-8 mb-12">
             <div
-              className="bg-primary h-2.5 rounded-full transition-all duration-300"
-              style={{ width: `${(step / totalSteps) * 100}%` }}
+              className="h-2.5 rounded-full transition-all duration-300"
+              style={{ 
+                width: `${(step / totalSteps) * 100}%`,
+                background: 'var(--primary-color)'
+              }}
             />
           </div>
         </div>
 
-        <div className="bg-card p-8 rounded-lg shadow-sm border">
+        <div className="bg-white p-8 rounded-lg shadow-sm border" style={{ borderColor: '#e5e7eb' }}>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {renderStep()}
-              <div className="flex justify-between pt-6 border-t">
-              <Button 
-                  type="button" 
-                  disabled={isFormSubmitting}
-                  onClick={async (e) => {
-                    e.preventDefault();
-
-                    // Validate current step fields only
-                    const fields = stepFields[step] ?? [];
-                    const isValid = fields.length ? await trigger(fields as any) : await trigger();
-
-                    if (!isValid) {
-                      const firstError = Object.keys(errors)[0];
-                      if (firstError) {
-                        const element = document.querySelector(`[name="${firstError}"]`);
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                      }
-                      return;
-                    }
-
-                    // Advance steps until final; only submit on final step
-                    if (step < totalSteps) {
-                      setStep(step + 1);
-                      window.scrollTo(0, 0);
-                      return;
-                    }
-
-                    await handleSubmit(onSubmit)(e as any);
+              <div className="flex justify-between pt-6" style={{ borderTop: '1px solid #e5e7eb' }}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={prevStep}
+                  disabled={step === 1}
+                  style={{ 
+                    background: 'transparent',
+                    color: 'var(--text-primary)',
+                    borderColor: '#d1d5db'
                   }}
                 >
-                  {isFormSubmitting ? 'Processing...' : step === totalSteps ? 'Complete Setup' : 'Continue'}
+                  Previous
                 </Button>
+                
+                {step === totalSteps ? (
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    style={{
+                      background: 'var(--primary-color)',
+                      color: '#000',
+                      border: 'none'
+                    }}
+                  >
+                    {isSubmitting ? 'Processing...' : 'Complete Setup'}
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    onClick={nextStep}
+                    style={{
+                      background: 'var(--primary-color)',
+                      color: '#000',
+                      border: 'none'
+                    }}
+                  >
+                    Continue
+                  </Button>
+                )}
               </div>
             </form>
           </FormProvider>

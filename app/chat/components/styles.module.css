@@ -1,0 +1,1148 @@
+/* variables to control spacing so centering is predictable */
+.chatContainer {
+  --header-height: 72px;
+  --fixedbar-bottom: 24px;   /* desktop default distance from viewport bottom */
+  --fixedbar-space: 184px;   /* space to reserve in chatArea for fixedBar (desktop) */
+}
+
+/* Chat interface styles */
+.chatContainer {
+  /* make the interface sit on top of any parent and fill the viewport */
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  width: 100vw;
+  height: 100vh;
+  background: #fff; /* force white background to hide blue-green parent */
+  display: flex;
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+  overflow: hidden; /* prevent page scroll; internal panes will scroll */
+  z-index: 9999;
+}
+
+/* ensure wrapper fills the fixed container */
+.mainWrapper {
+  width: 100%;
+  height: 100%;
+  background: transparent; /* already white via chatContainer */
+  overflow: hidden;
+  display: flex;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+  position: relative; /* needed so sidebar-bottom can be absolutely positioned */
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.brandName {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.searchBox {
+  position: relative;
+  margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 14px 10px 44px; /* room for icon */
+  border: 1px solid #e6eef6;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  box-sizing: border-box;
+}
+
+.searchInput::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+.searchInput:focus {
+  border-color: #c7b3ff;
+  box-shadow: 0 6px 18px rgba(124,58,237,0.08);
+}
+
+/* ensure icon and input align correctly in narrow sidebars */
+@media (max-width: 420px) {
+  .searchInput { padding-left: 40px; font-size: 13px; }
+  .searchIcon { left: 10px; width:16px; height:16px; }
+}
+
+.navSection {
+  margin-bottom: 24px;
+}
+
+.navButton {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+}
+
+.navButton:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.navButtonIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.recentChatsSection {
+  flex: 1;
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.recentChatItem {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 14px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+}
+
+.recentChatItem:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.upgradeCard {
+  background: linear-gradient(135deg, #ddd6fe 0%, #e879f9 100%);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.upgradeTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #581c87;
+  margin-bottom: 4px;
+}
+
+.upgradeDescription {
+  font-size: 12px;
+  color: #7c3aed;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.upgradeButton {
+  width: 100%;
+  padding: 8px 12px;
+  background: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #581c87;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.2s;
+}
+
+.upgradeButton:hover {
+  background: #f8fafc;
+}
+
+/* Main Content */
+.mainContent {
+  flex: 1;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Chat area should scroll if content is tall */
+.chatArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;   /* move "Hello / How can I help you" to the middle */
+  padding: 40px;
+  padding-bottom: 160px;     /* reserve space so content isn't hidden by fixed input */
+  background: white;
+  width: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* MOBILE: increase distance from bottom so bar sits lower and footer stays visible */
+@media (max-width: 860px) {
+  .chatContainer {
+    --fixedbar-bottom: 64px;
+    --fixedbar-space: 240px;
+  }
+}
+
+@media (max-width: 520px) {
+  .chatContainer {
+    --fixedbar-bottom: 88px;   /* move chat bar lower on small phones */
+    --fixedbar-space: 300px;   /* reserve more space so centering looks correct */
+  }
+
+  .fixedBar {
+    width: calc(100% - 24px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .messageInput {
+    padding: 10px 100px 10px 14px;
+  }
+
+  .inputArea .sendButton {
+    right: 12px;
+  }
+  .inputArea .micButton {
+    right: 58px;
+  }
+}
+
+/* Desktop: slightly reduce reserved bottom-space so greeting is visually centered */
+@media (min-width: 861px) {
+  .chatContainer {
+    --fixedbar-bottom: 24px;
+    --fixedbar-space: 160px;
+  }
+
+  .fixedBar {
+    bottom: var(--fixedbar-bottom);
+  }
+}
+
+/* small adjustment: ensure fixedBar stays above footer and is always centered horizontally */
+.fixedBar,
+.footer,
+.inputArea {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.mainHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 1px solid #f1f5f9;
+  background: white;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.versionButton {
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.versionButton:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userDetails {
+  text-align: right;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.userEmail {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.greeting {
+  text-align: center;
+  margin-bottom: 40px; /* Reduced margin */
+}
+
+.greetingTitle {
+  font-size: 48px; /* Reduced size */
+  font-weight: 300;
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.greetingSubtitle {
+  font-size: 20px; /* Reduced size */
+  color: #64748b;
+  font-weight: 300;
+}
+
+/* reserve exact space for centering the greeting (uses variable) */
+.chatArea {
+  padding-top: 40px;
+  padding-bottom: var(--fixedbar-space);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.suggestionsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 900px; /* Reduced max-width */
+  margin-bottom: 40px; /* Reduced margin */
+}
+
+.suggestionCard {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px; /* Reduced padding */
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 140px; /* Reduced height */
+}
+
+.suggestionCard:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.suggestionIcon {
+  width: 40px; /* Reduced size */
+  height: 40px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: white;
+  font-size: 18px; /* Reduced size */
+}
+
+.suggestionTitle {
+  font-size: 15px; /* Slightly reduced */
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.suggestionDescription {
+  font-size: 13px; /* Slightly reduced */
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.inputArea {
+  position: fixed;                       /* fix at viewport bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 24px;
+  width: min(920px, calc(100% - 40px));  /* keeps a sensible max width and side gutters */
+  padding: 0 12px;                       /* inner spacing for small viewports */
+  box-sizing: border-box;
+  z-index: 60;
+  background: transparent;               /* keep visual matching; inner elements have bg */
+}
+
+/* Make the input itself full width inside the fixed bar */
+.messageInput {
+  width: 100%;
+  height: 52px;
+  min-height: 48px;
+  padding: 10px 120px 10px 20px; /* room for buttons on the right */
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 9999px;
+  border: 1px solid #eef2f7;
+  background: #fff;
+  color: #0f172a;
+  box-sizing: border-box;
+  outline: none;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+  display: block;
+}
+
+/* send + mic buttons are positioned relative to the fixed inputArea */
+.inputArea .sendButton {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  cursor: pointer;
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  color: white;
+  box-shadow: 0 8px 20px rgba(124,58,237,0.12);
+  padding: 0;
+  z-index: 3;
+}
+
+.inputArea .micButton {
+  position: absolute;
+  right: 74px; /* sits left of the send button */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  cursor: pointer;
+  background: #f1f5f9;
+  color: #64748b;
+  z-index: 3;
+}
+
+/* Prevent chat content from being hidden under the fixed bar on tall screens */
+@media (min-height: 700px) {
+  .chatArea { padding-bottom: 220px; }
+}
+
+/* Mobile adjustments: smaller bar, keep centered and not full-width */
+@media (max-width: 520px) {
+  .chatArea {
+    padding: 20px;
+    padding-bottom: 120px; /* less reserved space on very small screens */
+    justify-content: center;
+  }
+
+  .inputArea {
+    bottom: 48px; /* moved up on small screens */
+    width: calc(100% - 24px);
+    padding: 0 8px;
+  }
+
+  .messageInput {
+    height: 48px;
+    padding: 10px 100px 10px 14px;
+    font-size: 14px;
+  }
+
+  .inputArea .sendButton {
+    right: 12px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .inputArea .micButton {
+    right: 58px;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* keep footer clear below the input */
+  .footer {
+    bottom: 10px;
+  }
+}
+
+/* Desktop: keep layout comfortable and ensure input doesn't overlap content */
+@media (min-width: 861px) {
+  .chatArea { padding-bottom: 160px; }
+}
+
+/* --- NEW STYLES FOR VOICE CHAT --- */
+
+.iconButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  cursor: pointer;
+  background: #f1f5f9;
+  color: #64748b;
+  transition: all 0.2s ease;
+  z-index: 3;
+}
+
+.iconButton:hover {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.micButton {
+  right: 70px; /* Positioned next to the send button */
+}
+
+@media (max-width: 520px) {
+  .micButton { right: 60px; width: 40px; height: 40px; }
+}
+
+
+.voiceOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.voiceModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  width: 100%;
+  height: 100%;
+}
+
+.closeVoiceButton {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  background: #e2e8f0;
+  color: #475569;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.closeVoiceButton:hover {
+  background: #cbd5e1;
+  transform: scale(1.1);
+}
+
+.pulsingCircle {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  position: relative;
+  background: conic-gradient(from 180deg at 50% 50%, #8b5cf6, #ec4899, #f97316, #8b5cf6);
+  display: grid;
+  place-items: center;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pulsingCircle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  filter: blur(30px);
+  opacity: 0.8;
+  z-index: -1;
+}
+
+.pulsingCircleCenter {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.isPulsing {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.transcript {
+  font-size: 28px;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: center;
+  max-width: 600px;
+  min-height: 70px; /* Reserve space to prevent layout shift */
+  padding: 0 20px;
+}
+
+.voiceFooter {
+  color: #64748b;
+  font-size: 16px;
+}
+
+.sidebarBottom {
+  position: absolute;
+  bottom: 50px;                /* move up from the very bottom */
+  right: 18px;                 /* align to sidebar right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
+  z-index: 4;
+}
+
+.backButton {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid #e6eef6;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(2,6,23,0.06);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.backButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(2,6,23,0.08);
+}
+
+@media (max-width: 520px) {
+  .backButton { padding: 7px 10px; font-size: 13px; }
+}
+
+/* MOBILE: hide sidebar by default and enable slide-in */
+@media (max-width: 860px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-110%);
+    transition: transform 240ms ease;
+    z-index: 10001;
+    box-shadow: 8px 0 30px rgba(2,6,23,0.12);
+    background: #f8fafc;
+  }
+
+  /* when sidebarOpen is applied */
+  .sidebarOpen {
+    transform: translateX(0) !important;
+  }
+
+  /* overlay behind sidebar to dismiss */
+  .sidebarOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 10000;
+  }
+
+  /* show hamburger button in header (left) */
+  .mobileMenuButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid #e6eef6;
+    color: #334155;
+    margin-right: 12px;
+    cursor: pointer;
+  }
+
+  /* move header layout so hamburger sits flush left */
+  .mainHeader {
+    padding: 12px 16px;
+  }
+
+  /* ensure mainContent takes full width when sidebar hidden */
+  .mainContent {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* make suggestions stack single column on mobile */
+  .suggestionsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 720px;
+  }
+
+  /* input area spacing reduced to keep small screens usable */
+  .inputArea {
+    padding: 0 10px;
+    margin: 12px auto;
+    max-width: calc(100% - 20px);
+  }
+
+  .messageInput {
+    padding: 10px 100px 10px 16px; /* keep room for buttons */
+  }
+
+  .sendButton {
+    right: 12px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .micButton {
+    right: 64px;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* hide user details on very small widths to keep header compact */
+  .userDetails { display: none; }
+
+  /* reduce greeting size to fit */
+  .greetingTitle { font-size: 28px; }
+
+  /* ensure sidebar-bottom stays visible inside slide-in */
+  .sidebarBottom { right: 12px; bottom: 24px; }
+
+  /* when sidebar open, prevent body scroll by overflow on chatContainer (already fixed) */
+}
+
+/* ensure hamburger hidden on desktop */
+.mobileMenuButton {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .mobileMenuButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid #e6eef6;
+    color: #334155;
+    margin-right: 12px;
+    cursor: pointer;
+  }
+}
+
+/* hide suggestions and move/version behavior on small screens */
+@media (max-width: 860px) {
+  /* hide suggestion cards to simplify mobile layout */
+  .suggestionsGrid {
+    display: none;
+  }
+
+  /* center chat area content vertically and horizontally */
+  .chatArea {
+    align-items: center;      /* center children horizontally */
+    padding-top: 24px;        /* move content up a bit */
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .greeting {
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .greetingTitle {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+
+  .greetingSubtitle {
+    font-size: 15px;
+  }
+
+  /* make input area centered and constrained */
+  .inputArea {
+    margin: 8px auto 16px;
+    max-width: 720px;
+    width: 100%;
+    padding: 0 12px;
+  }
+
+  .messageInput {
+    max-width: 100%;
+    padding-right: 100px; /* keep room for buttons */
+  }
+
+  /* hide desktop header version button and show sidebar version */
+  .versionButton {
+    display: none;
+  }
+
+  .sidebarVersion {
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  /* ensure sidebar slides in (kept from previous rules) */
+  .sidebar {
+    transform: translateX(-110%);
+  }
+  .sidebarOpen {
+    transform: translateX(0) !important;
+  }
+
+  /* center footer text */
+  .footer {
+    text-align: center;
+    max-width: 720px;
+    margin-top: 18px;
+  }
+
+  /* collapse greeting and suggestions spacing so it looks like chatGPT mobile */
+  .chatArea > .greeting + .suggestionsGrid {
+    margin-top: 8px;
+  }
+
+  /* ensure mobile header still shows hamburger on the left and user avatar on right */
+  .mainHeader {
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+/* desktop: hide the sidebarVersion element */
+.sidebarVersion {
+  display: none;
+}
+
+/* ensure versionButton visible on desktop as before */
+@media (min-width: 861px) {
+  .versionButton {
+    display: inline-flex;
+  }
+}
+
+/* Move footer below the fixed chat input and make text black */
+.footer {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 8px;                 /* sits below .inputArea (which is bottom:24px) */
+  color: #000000;              /* black text */
+  text-align: center;
+  max-width: 920px;
+  width: calc(100% - 40px);
+  z-index: 40;                 /* keep under the input (input z-index:60) */
+  font-size: 12px;
+  padding: 6px 12px;
+  background: transparent;
+}
+
+/* Keep footer clear of input on tall screens */
+@media (min-height: 700px) {
+  .footer {
+    bottom: 12px;
+  }
+}
+
+/* Mobile adjustments so footer stays readable and centered */
+@media (max-width: 520px) {
+  .footer {
+    bottom: 6px;
+    font-size: 12px;
+    width: calc(100% - 24px);
+    padding: 4px 8px;
+  }
+}
+
+/* Desktop tweak (slightly higher if you prefer) */
+@media (min-width: 861px) {
+  .footer {
+    bottom: 18px;
+  }
+}
+
+/* new: fixedBar wraps inputArea + footer, keeps both centered and stacked */
+.fixedBar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 24px; /* main vertical position on desktop */
+  width: min(920px, calc(100% - 40px));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  z-index: 70;
+  pointer-events: none; /* allow children to control pointer events */
+}
+
+/* inputArea becomes relative inside fixedBar, allow pointer events */
+.inputArea {
+  position: relative;
+  width: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+  pointer-events: auto;
+  background: transparent;
+}
+
+/* keep the existing messageInput styling but ensure full width inside fixedBar */
+.messageInput {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* send + mic buttons stay positioned relative to inputArea */
+.inputArea .sendButton,
+.inputArea .micButton {
+  pointer-events: auto;
+}
+
+/* footer now sits directly under the input and is centered, black text */
+.footer {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  color: #000000;
+  text-align: center;
+  max-width: 920px;
+  width: 100%;
+  z-index: 60;
+  font-size: 12px;
+  padding: 0 12px;
+  background: transparent;
+  pointer-events: auto;
+}
+
+/* adjust fixedBar and spacing for mobile screens */
+@media (max-width: 520px) {
+  .fixedBar {
+    bottom: 48px; /* moved up a bit on small screens */
+    width: calc(100% - 24px);
+  }
+
+  .inputArea {
+    padding: 0 8px;
+  }
+
+  .messageInput {
+    padding: 10px 100px 10px 14px;
+    height: 48px;
+  }
+
+  .inputArea .sendButton { right: 12px; width: 40px; height: 40px; }
+  .inputArea .micButton { right: 58px; width: 40px; height: 40px; }
+
+  .footer { font-size: 12px; padding: 4px 8px; }
+}
+
+/* ensure chatArea has enough bottom padding to avoid content being hidden */
+.chatArea {
+  padding-bottom: calc(160px + 24px); /* reserve space for fixedBar */
+}
+
+@media (min-height: 700px) {
+  .chatArea { padding-bottom: calc(220px + 24px); }
+}
+
+/* DESKTOP: adjust fixedBar position and reserve correct space */
+@media (min-width: 861px) {
+  .chatContainer {
+    --fixedbar-bottom: 60px;   /* chatbar sits a bit higher, above footer text */
+    --fixedbar-space: 200px;   /* reserve more space for proper vertical centering */
+  }
+
+  .fixedBar {
+    bottom: var(--fixedbar-bottom);
+  }
+}
+
+/* MOBILE: push chatbar lower, just above the footer disclaimer */
+@media (max-width: 520px) {
+  .chatContainer {
+    --fixedbar-bottom: 40px;   /* bar now just above footer */
+    --fixedbar-space: 140px;   /* adjust reserved space */
+  }
+
+  .fixedBar {
+    bottom: var(--fixedbar-bottom);
+  }
+
+  .chatArea {
+    padding-bottom: var(--fixedbar-space);
+    justify-content: center;
+  }
+}
+
+/* Keep footer at the very bottom always */
+.footer {
+  position: fixed;
+  bottom: 8px; 
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 12px;
+  color: #000;
+  background: transparent;
+  width: calc(100% - 40px);
+  max-width: 920px;
+  z-index: 40;
+}
+
+/* shift fixed chat bar slightly to the right (desktop and mobile overrides) */
+@media (min-width: 861px) {
+  .fixedBar,
+  .inputArea {
+    left: calc(50% + 90px);
+    transform: translateX(-50%);
+  }
+
+  .footer {
+    left: calc(50% + 16px);
+    transform: translateX(-50%);
+  }
+}
+
+/* smaller nudge on small screens so it stays visually centered on phones */
+@media (max-width: 520px) {
+  .fixedBar,
+  .inputArea {
+    left: calc(50%);
+    transform: translateX(-50%);
+  }
+
+  .footer {
+    left: calc(50%);
+    transform: translateX(-50%);
+  }
+}

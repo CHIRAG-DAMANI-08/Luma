@@ -1,15 +1,17 @@
+// /app/layout.tsx
+import './globals.css'; // This imports your global variables
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import { Lexend } from 'next/font/google'; // <-- 1. Change from Inter to Lexend
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@/components/ui/toaster';
 import { Providers } from '@/app/providers';
 
-// Load the font with display: 'swap' to prevent layout shift
-const inter = Inter({ 
+// 2. Configure the Lexend font
+const lexend = Lexend({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter'
+  variable: '--font-lexend', // Use a CSS variable for the font
+  weight: ['400', '500', '700', '900'],
 });
 
 export const metadata: Metadata = {
@@ -23,20 +25,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      
-    <body className={`${inter.variable} font-sans`} suppressHydrationWarning>
-      <ClerkProvider>
-        <Providers>
-          <div className="min-h-screen flex flex-col">
-            <main className="flex-1">
-              {children}
-            </main>
-            <Toaster />
-          </div>
-        </Providers>
-      </ClerkProvider>
-    </body>
-  </html>
+    // 3. Apply the Lexend font variable to the <html> tag
+    <html lang="en" className={lexend.variable} suppressHydrationWarning>
+      <body style={{ 
+        backgroundColor: 'var(--background)', 
+        color: 'var(--foreground)',
+        fontFamily: 'var(--font-sans)'
+      }}>
+        <ClerkProvider>
+          <Providers>
+            <div className="min-h-screen flex flex-col">
+              <main className="flex-1">{children}</main>
+              <Toaster />
+            </div>
+          </Providers>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

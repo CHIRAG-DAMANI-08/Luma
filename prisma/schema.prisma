@@ -30,6 +30,8 @@ model User {
   // Relations
   moodEntries      MoodEntry[]
   activities       UserActivity[]
+  journalEntries   JournalEntry[]
+  motivations       Motivation[] // New relation field
   
   @@map("users")
 }
@@ -88,6 +90,9 @@ model Message {
   // Message content
   content           String
   role              String    // 'user' or 'assistant'
+
+  //journal entries
+  journalEntries JournalEntry[]
   
   // Metadata
   metadata          Json?
@@ -106,12 +111,14 @@ model MoodEntry {
   user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   mood              Int       // 1-5 scale
-  notes            String?
+  notes             String?
+  metadata          Json?     // For storing additional data like factors
   
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   
   @@index([userId])
+  @@index([userId, createdAt]) // Add this index for faster queries by date
   @@map("mood_entries")
 }
 
@@ -129,4 +136,38 @@ model UserActivity {
   @@index([userId])
   @@index([activityType])
   @@map("user_activities")
+}
+
+model JournalEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String?
+  content   String   // Markdown/rich text content
+  tags      String[] // Array of tags
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Add these new fields for Notion integration
+  notionPageId String?
+  lastSyncedAt DateTime?
+  syncNeeded   Boolean? @default(false)
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  Message Message[]
+}
+
+model Motivation {
+  id               String    @id @default(cuid())
+  userId           String    // The user receiving the motivation
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  senderName       String    // Name of the person sending motivation
+  note             String?   // Optional motivation message
+  goalText         String    // The goal being motivated
+  
+  createdAt        DateTime  @default(now())
+  
+  @@index([userId])
+  @@map("motivations")
 }

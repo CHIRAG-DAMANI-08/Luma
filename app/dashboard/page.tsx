@@ -118,7 +118,7 @@ export default function DashboardPage() {
               <p className={styles.cardDescription}>Reflect on your thoughts and feelings.</p>
             </Link>
 
-            <Link href="/mood-tracking" className={styles.card}>
+            <Link href="/mood" className={styles.card}>
               <div className={styles.iconPurple}>
                 <span className={`${styles.materialIcon} material-symbols-outlined`} style={{ color: "rgb(124, 58, 237)" }}>
                   sentiment_satisfied

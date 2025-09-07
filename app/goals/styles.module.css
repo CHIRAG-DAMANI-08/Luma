@@ -1,0 +1,904 @@
+/* filepath: c:\Users\Chirag\CascadeProjects\luma\app\goals\styles.module.css */
+/* Base & Typography - updated with fixed fullscreen positioning */
+.designRoot {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: #fdf7f9 !important; /* Your soft pink background */
+  overflow-y: auto !important;
+  z-index: 9999 !important; /* Ensure this is on top of everything */
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  font-family: 'Lexend', 'Noto Sans', sans-serif;
+  --primary-color: #ef4399;
+  --bg-color: #fdf7f9;
+  --text-dark: #1b0d14;
+  --text-medium: #9a4c73;
+  --border-color: #e7cfdb;
+  --bg-purple-light: #e9d5ff;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --transition: 0.2s ease;
+  color: var(--text-dark);
+}
+
+/* Layout - updated to work within fixed container */
+.container {
+  padding: 2.5rem 1rem;
+  background-color: var(--bg-color) !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.mainContent {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.header p {
+  margin-top: 0.75rem;
+  font-size: 1.125rem;
+  color: var(--text-medium);
+}
+
+/* Goals Grid */
+.goalsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+/* Card Styling */
+.goalsCard {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.goalsCard h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+/* Form Styling */
+.goalForm {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.goalForm input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+
+.goalForm input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(239, 67, 153, 0.2);
+}
+
+.goalForm input::placeholder {
+  color: var(--text-medium);
+}
+
+.goalForm button {
+  display: flex;
+  height: 3rem;
+  width: 3rem;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.goalForm button:hover {
+  background-color: rgba(239, 67, 153, 0.9);
+}
+
+.goalForm button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color);
+}
+
+/* Goals List */
+.goalsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.goalItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+  cursor: grab;
+}
+
+.goalItem:active {
+  cursor: grabbing;
+}
+
+.goalItem:hover {
+  border-color: var(--border-color);
+  background-color: white;
+}
+
+.goalContent {
+  flex: 1;
+}
+
+.goalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.goalHeader p {
+  font-weight: 500;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+/* Checkbox styling */
+.goalHeader input[type="checkbox"] {
+  margin-top: 0.25rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 0.25rem;
+  background-color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+}
+
+.goalHeader input[type="checkbox"]:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.goalHeader input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.goalHeader input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color);
+}
+
+/* Progress bar */
+.progressBarContainer {
+  padding-top: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.progressBarBg {
+  overflow: hidden;
+  height: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 9999px;
+  background-color: var(--bg-purple-light);
+}
+
+.progressBar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  background-color: var(--primary-color);
+  transition: width 0.5s ease;
+}
+
+/* Goal actions */
+.goalActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-medium);
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--text-medium);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.actionBtn:hover {
+  color: var(--primary-color);
+}
+
+.actionBtn span {
+  font-size: 1rem;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100; /* Higher than confetti */
+  overflow-y: auto;
+}
+
+.modalContainer {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(107, 114, 128, 0.75);
+  transition: opacity 0.3s ease-out;
+}
+
+.modalContent {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 32rem;
+  overflow: hidden;
+  text-align: left;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: translate3d(0, 0, 0);
+  transition: all 0.3s ease-out;
+  animation: modalEnter 0.3s ease-out forwards;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Modal header */
+.modalHeader {
+  display: flex;
+  padding: 1.25rem 1rem 1rem 1.5rem;
+}
+
+.modalIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 9999px;
+  background-color: #f3e8ff;
+  margin-right: 1rem;
+}
+
+.modalIcon span {
+  color: var(--primary-color);
+}
+
+.modalTitle {
+  margin-top: 0;
+}
+
+.modalTitle h3 {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 500;
+  color: #111827;
+  margin: 0;
+}
+
+.modalTitle p {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Modal body */
+.modalBody {
+  padding: 0 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.inputGroup {
+  display: flex;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.inputGroup input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--border-color);
+  border-right: none;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+  background-color: var(--bg-color);
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.inputGroup button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-left: none;
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.inputGroup button:hover {
+  background-color: #f3f4f6;
+}
+
+/* Modal footer */
+.modalFooter {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 1.5rem 1.5rem;
+  background-color: #f9fafb;
+  margin-top: 1.5rem;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: white;
+  background-color: var(--primary-color);
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.btnPrimary:hover {
+  background-color: rgba(239, 67, 153, 0.9);
+}
+
+.btnPrimary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--primary-color);
+}
+
+.btnSecondary {
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.btnSecondary:hover {
+  background-color: #f9fafb;
+}
+
+.btnSecondary:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #d1d5db;
+}
+
+/* Confetti Animation - Updated for triggering on events */
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confettiContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+/* Make confetti pieces slightly bigger and more visible */
+.confetti {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  animation: confettiFall 3s linear forwards; /* Changed to forwards to stay at final position */
+  border-radius: 2px; /* Optional: gives rounded corners to confetti pieces */
+}
+
+.confetti:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+  background-color: var(--primary-color);
+}
+
+.confetti:nth-child(2) {
+  left: 20%;
+  animation-delay: -0.2s;
+  background-color: var(--bg-purple-light);
+}
+
+.confetti:nth-child(3) {
+  left: 30%;
+  animation-delay: -0.4s;
+  background-color: white;
+}
+
+.confetti:nth-child(4) {
+  left: 40%;
+  animation-delay: -0.6s;
+  background-color: var(--primary-color);
+}
+
+.confetti:nth-child(5) {
+  left: 50%;
+  animation-delay: -0.8s;
+  background-color: var(--bg-purple-light);
+}
+
+.confetti:nth-child(6) {
+  left: 60%;
+  animation-delay: -1s;
+  background-color: white;
+}
+
+.confetti:nth-child(7) {
+  left: 70%;
+  animation-delay: -1.2s;
+  background-color: var(--primary-color);
+}
+
+.confetti:nth-child(8) {
+  left: 80%;
+  animation-delay: -1.4s;
+  background-color: var(--bg-purple-light);
+}
+
+.confetti:nth-child(9) {
+  left: 90%;
+  animation-delay: -1.6s;
+  background-color: white;
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background-color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  max-width: 320px;
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 6.7s;
+}
+
+.toastIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #fdf2f8;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.toastMessage {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.toastMessage p {
+  margin: 0;
+}
+
+.toastMessage p + p {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #777;
+}
+
+.toastNote {
+  font-size: 0.85rem !important;
+  font-style: italic !important;
+  color: #777 !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+  max-width: 240px !important;
+  overflow-wrap: break-word !important;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (min-width: 640px) {
+  .header h1 {
+    font-size: 3rem;
+  }
+  
+  .container {
+    padding: 4rem 2rem;
+  }
+  
+  .modalFooter {
+    flex-direction: row-reverse;
+  }
+  
+  .btnPrimary, .btnSecondary {
+    width: auto;
+    margin-bottom: 0;
+  }
+  
+  .btnPrimary {
+    margin-left: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .goalsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+  
+  .container {
+    padding: 4rem 2rem;
+  }
+}
+
+/* Goal preview in share modal */
+.goalPreview {
+  background-color: var(--bg-color);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.goalPreview h4 {
+  font-weight: 500;
+  margin: 0 0 0.75rem;
+  color: var(--text-dark);
+}
+
+.progressBarContainerSmall {
+  padding-top: 0.25rem;
+}
+
+/* Email share button */
+.emailShareButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.emailShareButton:hover {
+  background-color: var(--border-color);
+}
+
+.emailShareButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 67, 153, 0.2);
+}
+
+/* Motivations Section */
+.motivationsSection {
+  margin-top: 4rem;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.motivationsHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.motivationsTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.motivationsIcon {
+  color: var(--primary-color);
+}
+
+.motivationsSubtitle {
+  font-size: 1rem;
+  color: var(--text-medium);
+}
+
+.motivationsGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .motivationsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.motivationCard {
+  background-color: var(--bg-color);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border-left: 4px solid var(--primary-color);
+  transition: transform 0.2s ease;
+}
+
+.motivationCard:hover {
+  transform: translateY(-2px);
+}
+
+.motivationHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.motivationAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: var(--bg-purple-light);
+  border-radius: 50%;
+  margin-right: 0.75rem;
+}
+
+.motivationAvatar svg {
+  color: var(--primary-color);
+}
+
+.motivationFrom {
+  flex: 1;
+}
+
+.fromLabel {
+  font-size: 0.75rem;
+  color: var(--text-medium);
+  display: block;
+  line-height: 1;
+}
+
+.senderName {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+.motivationDate {
+  font-size: 0.75rem;
+  color: var(--text-medium);
+}
+
+.motivationGoal {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.goalLabel {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.motivationNote {
+  display: flex;
+  padding: 0 0.5rem;
+}
+
+.noteIcon {
+  margin-right: 0.5rem;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+  color: var(--text-medium);
+}
+
+.motivationNote p {
+  margin: 0;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--text-medium);
+}
+
+.noMotivations {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-medium);
+}
+
+.emptyStateIcon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.emptyStateIcon svg {
+  color: var(--border-color);
+}
+
+.motivationsLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  color: var(--text-medium);
+}
+
+.motivationsSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(239, 67, 153, 0.1);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,502 @@
+.container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: #f6e6ee !important; /* Match your light pink background */
+  overflow-y: auto !important;
+  z-index: 9999 !important; /* Ensure this is on top of everything */
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.content {
+  max-width: 800px !important;
+  width: 100% !important;
+  margin: 0 auto !important; /* Center horizontally */
+  padding: 20px !important;
+  padding-top: 60px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 48px !important;
+  align-items: center !important;
+  text-align: center !important;
+  border: none !important;
+}
+
+.card {
+  background-color: white !important; /* Use white background */
+  text-align: center !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-bottom: 32px !important;
+  padding: 24px !important;
+  border-radius: 24px !important;
+}
+
+.cardHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1b0d14; /* Dark text for contrast */
+  margin-bottom: 16px;
+}
+
+.subheading {
+  font-size: 1.125rem;
+  color: #333; /* Darker subheading */
+}
+
+.moodGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  margin-bottom: 32px !important;
+  width: 100% !important;
+  justify-content: center !important;
+}
+
+@media (min-width: 640px) {
+  .moodGrid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.moodItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.moodItem:hover {
+  border-color: #fd72ba; /* Light pink border on hover */
+}
+
+.selected {
+  border-color: #ef4399; /* Deeper pink border when selected */
+  background-color: rgba(254, 205, 234, 0.3); /* Very light pink background */
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+}
+
+.moodEmoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  font-size: 2rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.moodItem:hover .moodEmoji {
+  transform: scale(1.1);
+}
+
+.moodLabel {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333; /* Black-ish text */
+}
+
+.materialIcon {
+  font-family: 'Material Symbols Outlined';
+  font-size: 2rem;
+  color: #555;
+}
+
+.notesSection {
+  margin: 24px 0 32px;
+  padding: 0;
+  background: transparent;
+  width: 100%;
+  max-width: 600px; /* Match the textarea max-width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label {
+  text-align: center !important;
+  width: 100% !important;
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.textarea {
+  width: 100% !important; 
+  max-width: 600px !important; /* Increased from 500px to 600px */
+  margin: 0 auto !important;
+  background-color: white !important;
+  padding: 16px 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(239, 67, 153, 0.1);
+  background-color: #FFF6FA;
+  resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  min-height: 150px;
+}
+
+.textarea:focus {
+  outline: none;
+  background-color: white;
+  border-color: rgba(239, 67, 153, 0.3);
+  box-shadow: 0 0 0 2px rgba(239, 67, 153, 0.1);
+}
+
+.textarea::placeholder {
+  color: #9CA3AF;
+}
+
+.factorsSection {
+  margin-bottom: 32px;
+}
+
+.factorButtons {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 16px !important;
+  justify-content: center !important;
+  width: 100% !important;
+  max-width: 600px !important; /* Limit maximum width */
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Mental health themed colors for factors - now white by default */
+.factorButton {
+  padding: 10px 20px !important; /* More padding for better tap targets */
+  border-radius: 9999px !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid #e5e7eb; /* Light border for white buttons */
+  cursor: pointer;
+  color: #333; /* Default dark text for all */
+  background-color: white; /* White background for all unselected buttons */
+}
+
+.factorButton:hover {
+  background-color: #f9fafb; /* Very light gray on hover */
+  border-color: #d1d5db;
+}
+
+/* Selected state styling - apply specific colors when selected */
+.factorSelected.factorButton:nth-child(1) { /* Work */
+  background-color: #E9D8FD; /* Soft purple - focus/productivity */
+  border-color: #D6BCFA;
+}
+
+.factorSelected.factorButton:nth-child(2) { /* Relationships */
+  background-color: #FED7E2; /* Soft pink - connection/emotion */
+  border-color: #FBB6CE;
+}
+
+.factorSelected.factorButton:nth-child(3) { /* Health */
+  background-color: #BEE3F8; /* Soft blue - calm/wellness */
+  border-color: #90CDF4;
+}
+
+.factorSelected.factorButton:nth-child(4) { /* Exercise */
+  background-color: #C6F6D5; /* Soft green - energy/vitality */
+  border-color: #9AE6B4;
+}
+
+.factorSelected.factorButton:nth-child(5) { /* Weather */
+  background-color: #FEFCBF; /* Soft yellow - environment/brightness */
+  border-color: #FAF089;
+}
+
+.factorSelected.factorButton:nth-child(6) { /* Other */
+  background-color: #E2E8F0; /* Soft gray - neutral */
+  border-color: #CBD5E0;
+}
+
+.factorSelected {
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+.submitSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 320px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: #ef4399; /* Pink submit button */
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 15px -3px rgba(239, 67, 153, 0.3);
+  margin: 0 auto !important;
+}
+
+.submitButton:hover {
+  background-color: #d61f69;
+  box-shadow: 0 15px 20px -3px rgba(239, 67, 153, 0.4);
+}
+
+.submitButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.timeWarning {
+  margin-top: 12px;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.chartTitle {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333; /* Black-ish text */
+  margin-bottom: 32px;
+}
+
+.chart {
+  margin-top: 32px;
+}
+
+.chartContainer {
+  width: 100% !important;
+  max-width: 700px !important;
+  padding: 20px !important;
+  margin: 0 auto 40px auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background-color: white !important;
+  border-radius: 24px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+.chartBars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 200px !important; /* Fixed height */
+  gap: 12px !important; /* Add space between bars */
+  width: 100%;
+  padding: 0 8px 24px 8px;
+  border-left: 2px solid #e5e7eb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.barColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s;
+}
+
+.bar:hover {
+  opacity: 0.8;
+}
+
+/* Mental health colors for different mood levels */
+.barSad {
+  background-color: #FDB5B5; /* Soft red - sadness */
+}
+
+.barAnxious {
+  background-color: #FFEAA7; /* Soft yellow - anxiety */
+}
+
+.barCalm {
+  background-color: #B2E2F2; /* Soft blue - calm */
+}
+
+.barHappy {
+  background-color: #FDC5E5; /* Soft pink - happiness */
+}
+
+.barExcited {
+  background-color: #FC8BAD; /* Brighter pink - excitement */
+}
+
+.dayLabel {
+  margin-top: 12px !important;
+  font-size: 0.875rem !important;
+  color: #444 !important;
+  width: 100% !important; 
+  text-align: center !important;
+  padding: 0 4px !important;
+}
+
+.noData {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+/* Toast styles */
+.toastContainer {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  min-width: 250px;
+  max-width: 350px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+}
+
+.toastSuccess {
+  background-color: #ecfdf5;
+  border-left: 4px solid #10b981;
+}
+
+.toastError {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+}
+
+.toastIcon {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+.toastMessage {
+  color: #1f2937;
+  font-size: 14px;
+  margin: 0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.userButtonContainer {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 100;
+}
+
+.backButton {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: #6b7280; /* Grey color */
+  color: white;
+  border-radius: 50%;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.backButton:hover {
+  background-color: #4b5563; /* Darker grey on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(107, 114, 128, 0.4);
+}
+
+.backIcon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* Update mobile responsive style */
+@media (max-width: 640px) {
+  .backButton {
+    bottom: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .backIcon {
+    font-size: 18px;
+  }
+}

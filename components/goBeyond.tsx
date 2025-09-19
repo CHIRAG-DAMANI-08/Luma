@@ -1,55 +1,69 @@
+import { HeartHandshake, ShieldCheck, Sparkles } from 'lucide-react';
 import React from 'react';
-import { Shield, Heart, Star } from 'lucide-react';
 
-const BenefitsSection = () => {
-  const benefits = [
+interface FeatureCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => (
+  <div className="bg-white rounded-2xl p-8 text-center shadow-[0_4px_24px_rgba(0,0,0,0.05)] flex flex-col items-center">
+    <div className="w-16 h-16 flex items-center justify-center">
+      {icon}
+    </div>
+    <h3 className="mt-6 text-xl font-medium font-sans text-black">
+      {title}
+    </h3>
+    <p className="mt-2 text-base text-gray-600">
+      {description}
+    </p>
+  </div>
+);
+
+const GoingBeyondSection: React.FC = () => {
+  const features: FeatureCardProps[] = [
     {
-      icon: <Star className="w-8 h-8 text-pink-500" />,
-      title: "AI-Powered Guidance",
-      description: "Receive instant, personalized support from Luma’s advanced AI companion. Get actionable advice, coping strategies, and wellness tips tailored to your unique needs—anytime, anywhere."
+      icon: <HeartHandshake className="h-12 w-12 text-[#8B5CF6]" strokeWidth={1.5} />,
+      title: 'Winning Partnerships',
+      description: 'Access trusted partners in teletherapy, mobility, meal boxes, and more—making your wellness journey more supportive and affordable.',
     },
     {
-      icon: <Shield className="w-8 h-8 text-pink-500" />,
-      title: "Secure & Confidential",
-      description: "Luma uses the highest standards of security and privacy to protect your personal data and ensure your mental health journey remains completely confidential."
+      icon: <ShieldCheck className="h-12 w-12 text-[#8B5CF6]" strokeWidth={1.5} />,
+      title: 'Secure & Confidential',
+      description: 'Luma follows the highest security standards to protect your data and keep your activity on the platform private.',
     },
     {
-      icon: <Heart className="w-8 h-8 text-pink-500" />,
-      title: "Curated Resources",
-      description: "Access a rich library of mental wellness resources, including articles, exercises, and guided meditations, all designed to help you grow and thrive."
-    }
+      icon: <Sparkles className="h-12 w-12 text-[#8B5CF6]" strokeWidth={1.5} />,
+      title: '5-Star Support',
+      description: 'Fast, compassionate, and helpful support. We\'re here to help you get the most out of Luma—at your pace.',
+    },
   ];
 
   return (
-    <div className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center space-y-8 mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
-            Going beyond mental health
+    <section className="bg-[#F4F1FF] py-20 lg:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="text-center">
+          <h2 className="font-serif text-4xl md:text-[40px] font-normal text-gray-800 leading-tight">
+            Going beyond benefits
           </h2>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-            Luma is much more than a mental health app; our AI companion and curated resources provide comprehensive support for your personal wellness journey.
+          <p className="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+            Luma is more than benefits; it's a suite of supportive tools in one intuitive place—so you can focus on feeling better, not figuring things out.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {benefits.map((benefit, index) => (
-            <div key={index} className="text-center space-y-6">
-              <div className="flex justify-center">
-                <div className="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center">
-                  {benefit.icon}
-                </div>
-              </div>
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900">{benefit.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
-              </div>
-            </div>
+        <div className="mt-16 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature) => (
+            <FeatureCard
+              key={feature.title}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+            />
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default BenefitsSection;
+export default GoingBeyondSection;

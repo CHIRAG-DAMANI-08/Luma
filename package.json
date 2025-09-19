@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@11labs/react": "^0.2.0",
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/nextjs": "^6.31.6",
     "@elevenlabs/client": "^0.6.1",
     "@hookform/resolvers": "^5.2.1",
@@ -29,7 +30,11 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "elevenlabs": "^1.59.0",
+    "firebase": "^12.2.1",
+    "firebase-admin": "^13.5.0",
+    "firebase-functions": "^6.4.0",
     "framer-motion": "^12.23.12",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.542.0",
     "next": "15.5.2",
     "next-themes": "^0.4.6",
@@ -40,6 +45,7 @@
     "react-speech-recognition": "^4.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
+    "three": "^0.180.0",
     "zod": "^4.1.5"
   },
   "devDependencies": {
@@ -50,6 +56,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/react-speech-recognition": "^3.9.6",
+    "@types/three": "^0.180.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4",

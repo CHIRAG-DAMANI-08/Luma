@@ -1,16 +1,16 @@
 // /app/layout.tsx
-import './globals.css'; // This imports your global variables
+import './globals.css';
 import type { Metadata } from 'next';
-import { Lexend } from 'next/font/google'; // <-- 1. Change from Inter to Lexend
+import { Lexend } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@/components/ui/toaster';
 import { Providers } from '@/app/providers';
 
-// 2. Configure the Lexend font
+// Configure the Lexend font
 const lexend = Lexend({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-lexend', // Use a CSS variable for the font
+  variable: '--font-lexend',
   weight: ['400', '500', '700', '900'],
 });
 
@@ -25,8 +25,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // 3. Apply the Lexend font variable to the <html> tag
     <html lang="en" className={lexend.variable} suppressHydrationWarning>
+      <head>
+        {/* Add OneSignal SDK */}
+        <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.OneSignalDeferred = window.OneSignalDeferred || [];
+            OneSignalDeferred.push(async function(OneSignal) {
+              await OneSignal.init({
+                appId: "1fdccdfc-93e3-4759-b153-f881c66ba78f",
+                safari_web_id: "web.onesignal.auto.44e6ca0d-bbca-461f-908e-69d9a6be2a2a",
+                notifyButton: {
+                  enable: true,
+                },
+                allowLocalhostAsSecureOrigin: true,
+              });
+            });
+          `
+        }} />
+      </head>
       <body style={{ 
         backgroundColor: 'var(--background)', 
         color: 'var(--foreground)',
@@ -34,6 +52,7 @@ export default function RootLayout({
       }}>
         <ClerkProvider>
           <Providers>
+            {/* Remove Service Worker Registration since OneSignal handles this */}
             <div className="min-h-screen flex flex-col">
               <main className="flex-1">{children}</main>
               <Toaster />

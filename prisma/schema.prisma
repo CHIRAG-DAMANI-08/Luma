@@ -32,6 +32,8 @@ model User {
   activities       UserActivity[]
   journalEntries   JournalEntry[]
   motivations       Motivation[] // New relation field
+  posts             Post[]
+  votes             Vote[]
   
   @@map("users")
 }
@@ -110,7 +112,7 @@ model MoodEntry {
   userId            String
   user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  mood              Int       // 1-5 scale
+  mood              String       
   notes             String?
   metadata          Json?     // For storing additional data like factors
   
@@ -170,4 +172,31 @@ model Motivation {
   
   @@index([userId])
   @@map("motivations")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  votes     Vote[]
+  anonymousUsername String
+}
+
+model Vote {
+  id     String   @id @default(cuid())
+  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  type   VoteType
+
+  @@unique([userId, postId])
+}
+
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
 }

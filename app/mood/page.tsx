@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useUser } from "@clerk/nextjs";
+import React, { useState, useEffect, useCallback } from "react";
+import { useUser, useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import styles from "./styles.module.css";
@@ -25,41 +25,57 @@ const Toast = ({ message, type, onClose }: { message: string; type: 'success' | 
   );
 };
 
+interface MoodEntry {
+    id: string;
+    mood: string;
+    notes: string | null;
+    createdAt: string;
+}
+
 export default function MoodTrackingPage() {
   const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
   const [selectedMood, setSelectedMood] = useState("");
   const [notes, setNotes] = useState("");
   const [factors, setFactors] = useState<string[]>([]);
-  const [weeklyMoods, setWeeklyMoods] = useState<any[]>([]);
+  const [weeklyMoods, setWeeklyMoods] = useState<MoodEntry[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lastEntry, setLastEntry] = useState<Date | null>(null);
   // Add toast state
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  useEffect(() => {
-    if (isLoaded && user) {
-      fetchMoodEntries();
-    }
-  }, [isLoaded, user]);
-
-  const fetchMoodEntries = async () => {
+  const fetchMoodEntries = useCallback(async () => {
     try {
-      const response = await fetch("/api/mood/get-entries");
+      const token = await getToken();
+      const response = await fetch("/api/mood", {
+        method: "GET",
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await response.json();
       
-      if (data.entries) {
-        setWeeklyMoods(data.entries);
+      if (data.moodEntries) {
+        setWeeklyMoods(data.moodEntries);
         
         // Check last entry time
-        if (data.entries.length > 0) {
-          const lastEntryTime = new Date(data.entries[0].createdAt);
+        if (data.moodEntries.length > 0) {
+          const lastEntryTime = new Date(data.moodEntries[0].createdAt);
           setLastEntry(lastEntryTime);
         }
       }
     } catch (error) {
       console.error("Failed to fetch mood entries:", error);
     }
-  };
+  }, [getToken]);
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      console.log("Your Clerk User ID is:", user.id);
+
+      fetchMoodEntries();
+    }
+  }, [isLoaded, user, getToken, fetchMoodEntries]);
 
   const handleFactorToggle = (factor: string) => {
     setFactors(prev => 
@@ -85,13 +101,15 @@ export default function MoodTrackingPage() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch("/api/mood/log-entry", {
+      const token = await getToken();
+      const response = await fetch("/api/mood", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          mood: getMoodRating(selectedMood),
+          mood: selectedMood,
           notes,
           factors,
         }),
@@ -100,7 +118,7 @@ export default function MoodTrackingPage() {
       if (response.ok) {
         // Show success toast
         setToast({ 
-          message: `Your ${selectedMood} mood has been logged successfully!`, 
+          message: `Your ${selectedMood} mood has been logged successfully!`,
           type: 'success' 
         });
         
@@ -121,19 +139,6 @@ export default function MoodTrackingPage() {
       setIsSubmitting(false);
     }
   };
-  
-  // Convert mood label to numeric rating (1-5)
-  const getMoodRating = (mood: string): number => {
-    const moodRatings: Record<string, number> = {
-      "sad": 1,
-      "anxious": 2,
-      "calm": 3,
-      "happy": 4,
-      "excited": 5,
-      "other": 3
-    };
-    return moodRatings[mood] || 3;
-  };
 
   // Check if user can log a mood (6-hour intervals)
   const canLogMood = () => {
@@ -153,6 +158,15 @@ export default function MoodTrackingPage() {
     "calm": "😌",
     "excited": "🤩",
     "other": "🙂"
+  };
+
+  const moodRatings: Record<string, number> = {
+    "sad": 1,
+    "anxious": 2,
+    "calm": 3,
+    "happy": 4,
+    "excited": 5,
+    "other": 3
   };
   
   return (
@@ -187,8 +201,7 @@ export default function MoodTrackingPage() {
             {Object.entries(moodEmojis).map(([mood, emoji]) => (
               <label 
                 key={mood} 
-                className={`${styles.moodItem} ${selectedMood === mood ? styles.selected : ''}`}
-              >
+                className={`${styles.moodItem} ${selectedMood === mood ? styles.selected : ''}`}>
                 <input
                   type="radio"
                   name="mood"
@@ -218,22 +231,21 @@ export default function MoodTrackingPage() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               className={styles.textarea}
-              placeholder="What's on your mind?"
+              placeholder="What&apos;s on your mind?"
               rows={2}
             ></textarea>
           </div>
           
           <div className={styles.factorsSection}>
             {/* Same factors section code */}
-            <h3 className={styles.label}>What's influencing your mood? (optional)</h3>
+            <h3 className={styles.label}>What&apos;s influencing your mood? (optional)</h3>
             <div className={styles.factorButtons}>
               {["Work", "Relationships", "Health", "Exercise", "Weather", "Other"].map(factor => (
                 <button
                   key={factor}
                   type="button"
                   onClick={() => handleFactorToggle(factor)}
-                  className={`${styles.factorButton} ${factors.includes(factor) ? styles.factorSelected : ""}`}
-                >
+                  className={`${styles.factorButton} ${factors.includes(factor) ? styles.factorSelected : ""}`}>
                   {factor}
                 </button>
               ))}
@@ -244,8 +256,7 @@ export default function MoodTrackingPage() {
             <button 
               className={styles.submitButton}
               onClick={handleSubmit}
-              disabled={isSubmitting || !selectedMood}
-            >
+              disabled={isSubmitting || !selectedMood}>
               {isSubmitting ? "Logging..." : "Log Mood"}
             </button>
             
@@ -267,7 +278,14 @@ export default function MoodTrackingPage() {
                     });
                     
                     const avgMood = dayEntries.length > 0
-                      ? dayEntries.reduce((sum, entry) => sum + entry.mood, 0) / dayEntries.length
+                      ? dayEntries.reduce((sum, entry) => {
+                          if (typeof entry.mood === 'string') {
+                            return sum + (moodRatings[entry.mood.toLowerCase()] || 3);
+                          } else if (typeof entry.mood === 'number') {
+                            return sum + entry.mood;
+                          }
+                          return sum;
+                        }, 0) / dayEntries.length
                       : 0;
                     
                     const height = avgMood > 0 ? (avgMood / 5) * 100 : 0;
@@ -277,8 +295,7 @@ export default function MoodTrackingPage() {
                       <div key={day} className={styles.barColumn}>
                         <div 
                           className={`${styles.bar} ${colorClass}`} 
-                          style={{ height: `${height}%` }}
-                        ></div>
+                          style={{ height: `${height}%` }}></div>
                         <span className={styles.dayLabel}>{day}</span>
                       </div>
                     );

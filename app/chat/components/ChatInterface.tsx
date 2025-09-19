@@ -1,31 +1,38 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { Search, Send, MessageSquare, Mic, X, AudioWaveform } from "lucide-react";
-import { useUser, UserButton } from "@clerk/nextjs";
+import { useUser, UserButton, useAuth } from "@clerk/nextjs";
 import styles from './styles.module.css';
 import { useConversation } from "@11labs/react";
 import { useRouter } from "next/navigation";
 
+interface Message {
+  audio?: {
+    data: string;
+    mimeType?: string;
+  };
+  text?: string;
+}
+
 const ChatInterface = () => {
   const { user } = useUser();
+  const { getToken, isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
-  const [message, setMessage] = useState("");
 
-  // NEW: mobile sidebar toggle
+  // NEW: sidebar state was missing
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // voice state (using ElevenLabs conversational logic)
+  // Existing voice state (using ElevenLabs conversational logic)
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [hasMicPermission, setHasMicPermission] = useState<boolean | null>(null);
   const [elevenError, setElevenError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // useConversation from @11labs/react — handlers implement play/side-effects
+  // --- ElevenLabs conversation setup (handlers use helper functions defined below) ---
   const conversation = useConversation({
     onConnect: () => console.debug("ElevenLabs: connected"),
     onDisconnect: () => console.debug("ElevenLabs: disconnected"),
-    onMessage: async (msg: any) => {
-      // Handle incoming agent messages. If audio is provided as base64, play it.
+    onMessage: async (msg: Message) => {
       try {
         if (msg?.audio?.data && msg.audio.data.startsWith("data:")) {
           // if already data URI, play directly
@@ -59,7 +66,77 @@ const ChatInterface = () => {
 
   const { status: convoStatus, isSpeaking } = conversation;
 
-  // request mic permissions on demand / mount
+  // NEW: RAG chat state
+  const [conversationHistory, setConversationHistory] = useState<{ role: string; text: string }[]>([]);
+  const [message, setMessage] = useState("");
+  const [isSaving] = useState(true);
+  const [status, setStatus] = useState("Type or record a message to get started.");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Function to handle sending a text message to our RAG API
+  const handleTextSend = async (messageText: string) => {
+    if (!messageText.trim() || !isLoaded || !isSignedIn) {
+        setStatus("Please wait, session is loading.");
+        return;
+    };
+    setIsLoading(true);
+
+    const newUserMessage = { role: 'user', text: messageText };
+    setConversationHistory(prev => [...prev, newUserMessage]);
+    setMessage('');
+    setStatus("Analyzing and thinking...");
+
+    try {
+      // Step 1: Combine the message into a single payload for the RAG pipeline
+      const payload = {
+        message: newUserMessage.text,
+        saveToDb: isSaving,
+        emotionAnalysis: null, // Send null for emotion analysis on text messages
+      };
+
+      const token = await getToken();
+      console.log("Clerk token:", token);
+      
+      // Step 2: Call the RAG Pipeline API with the combined payload
+      const chatResponse = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!chatResponse.ok) {
+        throw new Error(`Chat API error! status: ${chatResponse.status}`);
+      }
+
+      const chatResult = await chatResponse.json();
+      setConversationHistory(prev => [...prev, { role: 'model', text: chatResult.result }]);
+      setStatus("Response received.");
+
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('Error during chat:', errorMessage);
+      setStatus("Error: " + errorMessage);
+      setConversationHistory(prev => [
+        ...prev,
+        { role: 'model', text: `Sorry, there was an error processing your request. ${errorMessage}` }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVoiceSend = async () => {
+    // Placeholder for voice to text functionality.
+    // This function would first transcribe the audio, then call the emotion detection API,
+    // and finally send the combined payload to the RAG API.
+    const placeholderMessage = "User spoke an audio message.";
+    await handleTextSend(placeholderMessage);
+  };
+
+  // request mic permissions on mount
   useEffect(() => {
     const check = async () => {
       try {
@@ -103,7 +180,6 @@ const ChatInterface = () => {
   }
 
   function playAudioFromDataURI(dataUri: string) {
-    // data:audio/mpeg;base64,...
     const matches = dataUri.match(/^data:(audio\/[a-zA-Z0-9.+-]+);base64,(.*)$/);
     if (!matches) return;
     const mime = matches[1];
@@ -111,7 +187,6 @@ const ChatInterface = () => {
     playAudioFromBase64(b64, mime);
   }
 
-  // start voice conversation using ElevenLabs session (streams mic audio)
   const startVoiceModal = async () => {
     if (hasMicPermission === false) {
       alert("Microphone permission denied. Enable mic to use voice chat.");
@@ -120,7 +195,6 @@ const ChatInterface = () => {
     setElevenError(null);
     setIsVoiceMode(true);
     try {
-      // start session with agent id from env
       await conversation.startSession({
         agentId: process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID || undefined,
       });
@@ -143,12 +217,12 @@ const ChatInterface = () => {
 
   const suggestions = [
     {
-      title: "2‑minute breathing",
+      title: "2-minute breathing",
       description: "A short guided breathing exercise to help you calm down and focus.",
       icon: "🧘‍♀️"
     },
     {
-      title: "Quick mood check", 
+      title: "Quick mood check",
       description: "Answer a few quick prompts to reflect on how you're feeling right now.",
       icon: "📊"
     },
@@ -268,7 +342,20 @@ const ChatInterface = () => {
               </p>
             </div>
 
-            {/* Suggestions - will be hidden on small screens via CSS */}
+            {/* A tiny testing area that shows conversation lines (non-intrusive)
+            {conversationHistory.length > 0 && (
+              <div style={{ margin: "0 auto 1rem", maxWidth: 800 }}>
+                {conversationHistory.map((m, idx) => (
+                  <div key={idx} style={{ textAlign: m.role === 'user' ? 'right' : 'left', padding: '2px 0' }}>
+                    <strong>{m.role}:</strong> {m.text}
+                  </div>
+                ))}
+              </div>
+            )} */}
+
+            
+
+            {/* Suggestions - will be hidden on small screens via CSS
             <div className={styles.suggestionsGrid}>
               {suggestions.map((suggestion, index) => (
                 <div key={index} className={styles.suggestionCard}>
@@ -283,7 +370,40 @@ const ChatInterface = () => {
                   </p>
                 </div>
               ))}
-            </div>
+            </div> */}
+
+            {/* Scrollable chat feed */}
+<div className={styles.messagesContainer}>
+  {conversationHistory.map((m, idx) => (
+    <div
+      key={idx}
+      className={`${styles.messageBubble} ${
+        m.role === 'user' ? styles.userMessage : styles.botMessage
+      }`}
+    >
+      {m.text}
+    </div>
+  ))}
+</div>
+
+{/* Suggestions only if no chat yet */}
+{conversationHistory.length === 0 && (
+  <div className={styles.suggestionsGrid}>
+    {suggestions.map((suggestion, index) => (
+      <div key={index} className={styles.suggestionCard}>
+        <div className={styles.suggestionIcon}>
+          {suggestion.icon}
+        </div>
+        <h3 className={styles.suggestionTitle}>
+          {suggestion.title}
+        </h3>
+        <p className={styles.suggestionDescription}>
+          {suggestion.description}
+        </p>
+      </div>
+    ))}
+  </div>
+)}
 
             {/* Fixed bottom bar wrapper - keeps input centered and footer directly below it */}
             <div className={styles.fixedBar}>
@@ -298,7 +418,8 @@ const ChatInterface = () => {
                 <button onClick={startVoiceModal} className={`${styles.iconButton} ${styles.micButton}`} aria-label="Open voice chat">
                   <AudioWaveform size={20} />
                 </button>
-                <button className={styles.sendButton}>
+                {/* fixed: call handleTextSend when clicking send */}
+                <button className={styles.sendButton} onClick={() => handleTextSend(message)}>
                   <Send size={18} />
                 </button>
               </div>
@@ -313,21 +434,18 @@ const ChatInterface = () => {
         {/* --- Voice Chat Modal (ElevenLabs-driven) --- */}
         {isVoiceMode && (
           <div className={styles.voiceOverlay}>
-            <div className={styles.voiceModal} role="dialog" aria-modal="true">
+            <div className={styles.voiceModal}>
               <button onClick={stopVoiceModal} className={styles.closeVoiceButton}>
                 <X size={24} />
               </button>
-
-              <div className={`${styles.pulsingCircle} ${isSpeaking ? styles.isPulsing : ''}`}>
+              <div className={`${styles.pulsingCircle} ${isSpeaking ? styles.isPulsing : ""}`}>
                 <div className={styles.pulsingCircleCenter}>
                   <Mic size={40} color="white" />
                 </div>
               </div>
-
               <p className={styles.transcript}>
                 {convoStatus === "connected" ? (isSpeaking ? "Agent speaking…" : "Listening…") : "Connecting…"}
               </p>
-
               <div className={styles.voiceFooter}>
                 {elevenError ? elevenError : "Talk now — the session streams your audio to the agent."}
               </div>

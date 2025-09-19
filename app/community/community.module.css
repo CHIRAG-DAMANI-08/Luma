@@ -1,0 +1,81 @@
+/* app/community/community.module.css */
+
+.container {
+  background-color: #fdf7f9;
+  min-height: 100vh;
+  font-family: 'Lexend', 'Noto Sans', sans-serif;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  font-size: 1.125rem;
+  color: #333;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .mainGrid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.postsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.postCard {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s;
+  color: #000;
+}
+
+.postCard:hover {
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+.formCard {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 3000;
+}
+
+.formHeader {
+  background: linear-gradient(to right, #ef4399, #f7a8d0);
+  color: white;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.submitButton {
+  background-color: #ef4399;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+  background-color: #e92e84;
+}

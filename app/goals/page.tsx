@@ -1,6 +1,6 @@
 "use client";
 import { BellRing, GripVertical, PlusIcon, Share2, Smile, Heart, Copy, Send, MessageSquare } from "lucide-react";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import styles from "./styles.module.css";
@@ -41,6 +41,14 @@ interface Goal {
   category: 'short-term' | 'long-term';
 }
 
+interface Motivation {
+    id: string;
+    senderName: string;
+    goalText: string;
+    note: string;
+    createdAt: string;
+}
+
 export default function GoalsPage() {
   // Add toast state
   const [showToast, setShowToast] = useState(false);
@@ -71,7 +79,7 @@ export default function GoalsPage() {
   const [isDraggingOver, setIsDraggingOver] = useState<string | null>(null);
   
   // New state for motivations
-  const [motivations, setMotivations] = useState<any[]>([]);
+  const [motivations, setMotivations] = useState<Motivation[]>([]);
   const [isLoadingMotivations, setIsLoadingMotivations] = useState(false);
   // Add this for auto-refresh
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -320,7 +328,7 @@ export default function GoalsPage() {
   };
   
   // Fetch motivations from the server
-  const fetchMotivations = async () => {
+  const fetchMotivations = useCallback(async () => {
     if (!isLoaded || !user) return;
     
     try {
@@ -347,14 +355,14 @@ export default function GoalsPage() {
     } finally {
       setIsLoadingMotivations(false);
     }
-  };
+  }, [isLoaded, user]);
 
   // Initial fetch when component mounts
   useEffect(() => {
     if (isLoaded && user) {
       fetchMotivations();
     }
-  }, [isLoaded, user]);
+  }, [isLoaded, user, fetchMotivations]);
   
   // Check for motivation query parameter
   useEffect(() => {
@@ -362,7 +370,7 @@ export default function GoalsPage() {
       // Trigger a refresh immediately when 'motivated' param is present
       fetchMotivations();
     }
-  }, [searchParams]);
+  }, [searchParams, fetchMotivations]);
   
   // Set up auto-refresh interval
   useEffect(() => {
@@ -375,7 +383,7 @@ export default function GoalsPage() {
     
     // Clean up on unmount
     return () => clearInterval(interval);
-  }, [isLoaded, user]);
+  }, [isLoaded, user, fetchMotivations]);
   
   // Debug effect to log refreshes (optional)
   useEffect(() => {
@@ -524,7 +532,7 @@ export default function GoalsPage() {
                 {motivation.note && (
                   <div className={styles.motivationNote}>
                     <MessageSquare size={14} className={styles.noteIcon} />
-                    <p>"{motivation.note}"</p>
+                    <p>&quot;{motivation.note}&quot;</p>
                   </div>
                 )}
               </div>

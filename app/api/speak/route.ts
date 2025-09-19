@@ -46,8 +46,12 @@ export async function POST(req: Request) {
         "Content-Length": String(buffer.length),
       },
     });
-  } catch (err: any) {
-    console.error("TTS route error:", err);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("TTS route error:", err.message);
+    } else {
+      console.error("TTS route error:", err);
+    }
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

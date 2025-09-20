@@ -1,5 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
+
 }
 
 datasource db {
@@ -8,159 +12,162 @@ datasource db {
 }
 
 model User {
-  id             String         @id @default(cuid())
-  clerkId        String         @unique
-  email          String         @unique
-  name           String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  lastLoginAt    DateTime?
-  journalEntries JournalEntry[]
-  Post           Post[]
-  Vote           Vote[]
-  chatSessions   ChatSession[]
-  messages       Message[]
-  moodEntries    MoodEntry[]
-  motivations    Motivation[]
-  profile        Profile?
-  activities     UserActivity[]
-
+  id                 String    @id @default(cuid())
+  clerkId            String    @unique
+  email             String    @unique
+  name              String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  // Profile information
+  profile           Profile?
+  chatSessions      ChatSession[]
+  messages          Message[]
+  
+  // Authentication
+  lastLoginAt       DateTime?
+  
+  // Relations
+  moodEntries      MoodEntry[]
+  activities       UserActivity[]
+  journalEntries   JournalEntry[]
+  motivations       Motivation[] // New relation field
+  
   @@map("users")
 }
 
 model Profile {
-  id                 String   @id @default(cuid())
-  userId             String   @unique
-  nickname           String?
-  pronouns           String?
-  preferredLanguage  String   @default("en")
-  timezone           String   @default("UTC")
-  medicalConditions  String?
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Personal Information
+  nickname          String?
+  pronouns          String?
+  preferredLanguage String    @default("en")
+  timezone          String    @default("UTC")
+  
+  // Health Information
+  medicalConditions String?
   currentMedications String?
   therapyExperience  String?
-  comfortLevel       Int      @default(3)
-  goals              String?
-  checkInFrequency   String   @default("few_times_week")
-  dataSharingEnabled Boolean  @default(true)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  comfortLevel       Int       @default(3)
+  
+  // Goals and Preferences
+  goals             String?
+  checkInFrequency  String    @default("few_times_week")
+  
+  // Privacy Settings
+  dataSharingEnabled Boolean   @default(true)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
   @@map("profiles")
 }
 
 model ChatSession {
-  id        String    @id @default(cuid())
-  userId    String
-  title     String
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages  Message[]
-
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  messages         Message[]
+  
   @@map("chat_sessions")
 }
 
 model Message {
-  id             String         @id @default(cuid())
-  sessionId      String
-  userId         String
-  content        String
-  role           String
-  metadata       Json?
-  createdAt      DateTime       @default(now())
-  session        ChatSession    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  journalEntries JournalEntry[] @relation("JournalEntryToMessage")
+  id                String    @id @default(cuid())
+  sessionId         String
+  session           ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Message content
+  content           String
+  role              String    // 'user' or 'assistant'
 
+  //journal entries
+  journalEntries JournalEntry[]
+  
+  // Metadata
+  metadata          Json?
+  
+  createdAt         DateTime  @default(now())
+  
   @@index([sessionId])
   @@index([userId])
   @@map("messages")
 }
 
+// For future features
 model MoodEntry {
-  id        String   @id @default(cuid())
-  userId    String
-  mood      String
-  notes     String?
-  metadata  Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  mood              Int       // 1-5 scale
+  notes             String?
+  metadata          Json?     // For storing additional data like factors
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
   @@index([userId])
-  @@index([userId, createdAt])
+  @@index([userId, createdAt]) // Add this index for faster queries by date
   @@map("mood_entries")
 }
 
+// For tracking user engagement and feature usage
 model UserActivity {
-  id           String   @id @default(cuid())
-  userId       String
-  activityType String
-  metadata     Json?
-  createdAt    DateTime @default(now())
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  activityType      String    // e.g., 'login', 'chat_started', 'feature_used', etc.
+  metadata         Json?      // Additional data about the activity
+  
+  createdAt         DateTime  @default(now())
+  
   @@index([userId])
   @@index([activityType])
   @@map("user_activities")
 }
 
 model JournalEntry {
-  id           String    @id @default(uuid())
-  userId       String
-  title        String?
-  content      String
-  tags         String[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String?
+  content   String   // Markdown/rich text content
+  tags      String[] // Array of tags
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Add these new fields for Notion integration
   notionPageId String?
   lastSyncedAt DateTime?
-  syncNeeded   Boolean?  @default(false)
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Message      Message[] @relation("JournalEntryToMessage")
+  syncNeeded   Boolean? @default(false)
 
   @@index([userId])
   @@index([userId, createdAt])
+  Message Message[]
 }
 
 model Motivation {
-  id         String   @id @default(cuid())
-  userId     String
-  senderName String
-  note       String?
-  goalText   String
-  createdAt  DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id               String    @id @default(cuid())
+  userId           String    // The user receiving the motivation
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  senderName       String    // Name of the person sending motivation
+  note             String?   // Optional motivation message
+  goalText         String    // The goal being motivated
+  
+  createdAt        DateTime  @default(now())
+  
   @@index([userId])
   @@map("motivations")
-}
-
-model Post {
-  id                String   @id
-  content           String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime
-  authorId          String
-  anonymousUsername String
-  users             User     @relation(fields: [authorId], references: [id])
-  Vote              Vote[]
-}
-
-model Vote {
-  id     String   @id
-  postId String
-  userId String
-  type   VoteType
-  Post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  users  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, postId])
-}
-
-enum VoteType {
-  UPVOTE
-  DOWNVOTE
 }

@@ -1,6 +1,0 @@
-<!-- You can also create this icon programmatically -->
-<!-- Save this as public/icon-192x192.png -->
-<svg width="192" height="192" xmlns="http://www.w3.org/2000/svg">
-  <rect width="192" height="192" fill="#ef4399" rx="24"/>
-  <path d="M48 96L16 76.99L39.82 35.01L72.16 53.84L72.18 16H119.82L119.84 53.84L152.18 35.01L176 76.99L144 96L176 115.01L152.18 156.99L119.84 138.16L119.82 176H72.18L72.16 138.16L39.82 156.99L16 115.01L48 96Z" fill="white"/>
-</svg>

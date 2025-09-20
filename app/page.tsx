@@ -9,7 +9,6 @@ import UserTypesSection from "@/components/UserTypes";
 import BenefitsSection from "@/components/goBeyond";
 import MediaSection from "@/components/Statement";
 import CTASection from "@/components/Footer";
-import GoingBeyondSection from "@/components/goBeyond";
 
 export default function Home() {
   const { isSignedIn, userId } = useAuth();
@@ -63,7 +62,7 @@ export default function Home() {
       <MainFeatureSection />
       <CategoriesSection />
       <UserTypesSection />
-      <GoingBeyondSection />
+      <BenefitsSection />
       <MediaSection />
       <CTASection />
     </div>

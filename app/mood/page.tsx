@@ -69,7 +69,6 @@ export default function MoodTrackingPage() {
     );
   };
 
-  // Update the handleSubmit function to send the mood string directly
   const handleSubmit = async () => {
     if (!selectedMood) return;
     
@@ -92,7 +91,7 @@ export default function MoodTrackingPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          mood: selectedMood, // Send the mood string directly
+          mood: getMoodRating(selectedMood),
           notes,
           factors,
         }),
@@ -123,6 +122,19 @@ export default function MoodTrackingPage() {
     }
   };
   
+  // Convert mood label to numeric rating (1-5)
+  const getMoodRating = (mood: string): number => {
+    const moodRatings: Record<string, number> = {
+      "sad": 1,
+      "anxious": 2,
+      "calm": 3,
+      "happy": 4,
+      "excited": 5,
+      "other": 3
+    };
+    return moodRatings[mood] || 3;
+  };
+
   // Check if user can log a mood (6-hour intervals)
   const canLogMood = () => {
     if (!lastEntry) return true;
@@ -255,11 +267,7 @@ export default function MoodTrackingPage() {
                     });
                     
                     const avgMood = dayEntries.length > 0
-                      ? dayEntries.reduce((sum, entry) => {
-                          // Use the numeric rating from metadata, fallback to converting string mood
-                          const rating = entry.metadata?.moodRating || getMoodRatingFromString(entry.mood);
-                          return sum + rating;
-                        }, 0) / dayEntries.length
+                      ? dayEntries.reduce((sum, entry) => sum + entry.mood, 0) / dayEntries.length
                       : 0;
                     
                     const height = avgMood > 0 ? (avgMood / 5) * 100 : 0;
@@ -298,17 +306,4 @@ function getColorClass(mood: number): string {
   if (mood <= 3) return styles.barCalm;
   if (mood <= 4) return styles.barHappy;
   return styles.barExcited;
-}
-
-// Add helper function for backward compatibility
-function getMoodRatingFromString(mood: string): number {
-  const moodRatings: Record<string, number> = {
-    "sad": 1,
-    "anxious": 2,
-    "calm": 3,
-    "happy": 4,
-    "excited": 5,
-    "other": 3
-  };
-  return moodRatings[mood] || 3;
 }

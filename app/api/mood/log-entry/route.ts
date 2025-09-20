@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,45 +12,29 @@ export async function POST(req: NextRequest) {
     
     const { mood, notes, factors } = await req.json();
     
-    // Validate mood is a valid string
-    const validMoods = ["sad", "anxious", "calm", "happy", "excited", "other"];
-    if (!validMoods.includes(mood)) {
-      return NextResponse.json({ error: "Invalid mood value" }, { status: 400 });
+    // Validate input
+    if (typeof mood !== 'number' || mood < 1 || mood > 5) {
+      return NextResponse.json({ error: "Invalid mood rating" }, { status: 400 });
     }
 
-    // Get user from database, create if doesn't exist
-    let user = await prisma.user.findUnique({
+    // Get user from database
+    const user = await prisma.user.findUnique({
       where: { clerkId: userId }
     });
 
-    // If user doesn't exist in database, create them
     if (!user) {
-      const clerkUser = await currentUser();
-      
-      if (!clerkUser) {
-        return NextResponse.json({ error: "Unable to get user info" }, { status: 401 });
-      }
-
-      user = await prisma.user.create({
-        data: {
-          clerkId: userId,
-          email: clerkUser.emailAddresses[0]?.emailAddress || '',
-          name: clerkUser.firstName && clerkUser.lastName 
-            ? `${clerkUser.firstName} ${clerkUser.lastName}` 
-            : clerkUser.firstName || clerkUser.username || 'User',
-        }
-      });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
     
-    // Create mood entry with string mood and numeric rating in metadata
+    // Create mood entry
     const moodEntry = await prisma.moodEntry.create({
       data: {
         userId: user.id,
-        mood: mood, // Store as string
+        mood,
         notes: notes || null,
+        // Store factors as JSON in the notes field or extend your schema
         metadata: {
-          factors: factors || [],
-          moodRating: getMoodRating(mood) // Store numeric rating in metadata for charts
+          factors: factors || []
         }
       }
     });
@@ -64,17 +47,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Helper function to convert mood string to numeric rating (for metadata)
-function getMoodRating(mood: string): number {
-  const moodRatings: Record<string, number> = {
-    "sad": 1,
-    "anxious": 2,
-    "calm": 3,
-    "happy": 4,
-    "excited": 5,
-    "other": 3
-  };
-  return moodRatings[mood] || 3;
 }

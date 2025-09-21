@@ -13,11 +13,12 @@
     "build:no-functions": "next build || true && echo SKIP_FUNCTIONS"
   },
   "dependencies": {
-    "@11labs/react": "^0.2.0",
     "@chroma-core/default-embed": "^0.1.8",
-    "@clerk/clerk-sdk-node": "^5.1.6",
+    "@clerk/express": "^1.7.31",
     "@clerk/nextjs": "^6.32.0",
     "@elevenlabs/client": "^0.6.1",
+    "@elevenlabs/elevenlabs-js": "^2.15.0",
+    "@elevenlabs/react": "^0.6.3",
     "@google/genai": "^1.17.0",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.1",
@@ -39,7 +40,6 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
-    "elevenlabs": "^1.59.0",
     "framer-motion": "^12.23.12",
     "lexical": "^0.35.0",
     "lucide-react": "^0.542.0",

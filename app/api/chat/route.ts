@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
+import { getAuth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 import { getEmbedding, getOrCreateCollection } from '@/lib/chroma';
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 import { prisma } from '@/lib/prisma';

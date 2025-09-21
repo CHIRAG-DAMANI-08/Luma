@@ -56,14 +56,15 @@ export async function POST(req: Request) {
   const eventType = evt.type;
   console.log(`Webhook event type: ${eventType}`);
 
-  if(eventType === 'user.created') {
-    console.log('Processing user.created event');
+  if(eventType === 'user.created' || eventType === 'user.updated') {
+    console.log(`Processing ${eventType} event`);
+
     const { id, email_addresses, first_name, last_name } = evt.data;
 
-    const email = email_addresses[0]?.email_address;
+    const email = email_addresses?.[0]?.email_address;
 
     if(!id || !email) {
-        console.error('Missing data for user.created event');
+        console.error(`Missing data for ${eventType} event`, evt.data);
         return new Response('Error occured -- missing data', {
             status: 400
         })
@@ -71,21 +72,37 @@ export async function POST(req: Request) {
 
     const name = [first_name, last_name].filter(Boolean).join(' ').trim();
 
-    try {
-      await prisma.user.create({
-          data: {
-              clerkId: id,
-              email: email,
-              name: name || '',
-          }
-      })
-      console.log('User successfully created in database');
+    // try {
+    //   await prisma.user.create({
+    //       data: {
+    //           clerkId: id,
+    //           email: email,
+    //           name: name || '',
+    //       }
+    //   })
+
+     try {
+      // 🔥 Upsert instead of create (handles both new + updated users)
+      await prisma.user.upsert({
+        where: { clerkId: id },
+        update: {
+          email,
+          name,
+        },
+        create: {
+          clerkId: id,
+          email,
+          name: name || '',
+        },
+      });
+
+      console.log(`User successfully synced in database from ${eventType}`);
     } catch (dbError) {
-      console.error('Database error while creating user:', dbError);
+      console.error(`Database error while syncing user from ${eventType}:`, dbError);
       return new Response('Database error', { status: 500 });
     }
 
-    return new Response('User created', { status: 201 })
+    return new Response('User synced', { status: 201 })
   }
 
   console.log(`Webhook event type ${eventType} not handled`);

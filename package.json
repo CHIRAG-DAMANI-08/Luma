@@ -13,7 +13,6 @@
     "build:no-functions": "next build || true && echo SKIP_FUNCTIONS"
   },
   "dependencies": {
-    "@chroma-core/default-embed": "^0.1.8",
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/express": "^1.7.31",
     "@clerk/nextjs": "^6.32.0",
@@ -35,8 +34,7 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-toast": "^1.2.15",
     "@tabler/icons-react": "^3.34.1",
-    "@xenova/transformers": "^2.17.2",
-    "chromadb": "^3.0.15",
+    "boolean": "^3.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",

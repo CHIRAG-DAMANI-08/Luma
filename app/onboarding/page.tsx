@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs"; // changed to useAuth
 import { useRouter } from "next/navigation";
 import { useForm, useFormContext, FormProvider, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -442,62 +442,63 @@ export default function OnboardingPage() {
 
   if (!isLoaded || !userId) {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--accent-color)' }}>
+      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--primary)' }}>
         <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 mx-auto mb-4" style={{ borderTopColor: 'var(--primary-color)' }}></div>
-          <p style={{ color: 'var(--text-primary)' }}>Loading...</p>
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 mx-auto mb-4" style={{ borderTopColor: 'var(--primary-foreground)' }}></div>
+          <p style={{ color: 'var(--primary-foreground)' }}>Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--accent-color)' }}>
+    <div className="min-h-screen" style={{ background: 'var(--primary)' }}>
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Welcome to Luma</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--primary-foreground)' }}>Welcome to Luma</h1>
+          <p style={{ color: 'var(--primary-foreground)' }}>
             Let's set up your profile to personalize your experience
           </p>
+        </div>
 
-          {/* Progress Bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2.5 mt-8 mb-12">
+        {/* Onboarding card */}
+        <div className="p-8 rounded-lg shadow-sm border" style={{ background: 'var(--card)', borderColor: 'transparent', color: 'var(--primary-foreground)' }}>
+          {/* Progress Bar moved inside the card */}
+          <div className="w-full rounded-full h-3 mb-6" style={{ background: 'rgba(255,255,255,0.12)', overflow: 'hidden' }}>
             <div
-              className="h-2.5 rounded-full transition-all duration-300"
-              style={{ 
+              className="h-3 rounded-full transition-all duration-300"
+              style={{
                 width: `${(step / totalSteps) * 100}%`,
-                background: 'var(--primary-color)'
+                background: 'var(--primary-foreground)'
               }}
             />
           </div>
-        </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-sm border" style={{ borderColor: '#e5e7eb' }}>
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {renderStep()}
-              <div className="flex justify-between pt-6" style={{ borderTop: '1px solid #e5e7eb' }}>
+              <div className="flex justify-between pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={prevStep}
                   disabled={step === 1}
-                  style={{ 
+                  style={{
                     background: 'transparent',
-                    color: 'var(--text-primary)',
-                    borderColor: '#d1d5db'
+                    color: 'var(--primary-foreground)',
+                    borderColor: 'rgba(255,255,255,0.12)'
                   }}
                 >
                   Previous
                 </Button>
-                
+
                 {step === totalSteps ? (
                   <Button
                     type="submit"
                     disabled={isSubmitting}
                     style={{
-                      background: 'var(--primary-color)',
-                      color: '#000',
+                      background: 'var(--primary-foreground)',
+                      color: 'var(--primary)',
                       border: 'none'
                     }}
                   >
@@ -508,8 +509,8 @@ export default function OnboardingPage() {
                     type="button"
                     onClick={nextStep}
                     style={{
-                      background: 'var(--primary-color)',
-                      color: '#000',
+                      background: 'var(--primary-foreground)',
+                      color: 'var(--primary)',
                       border: 'none'
                     }}
                   >

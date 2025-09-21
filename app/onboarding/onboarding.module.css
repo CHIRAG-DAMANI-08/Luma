@@ -1,56 +1,65 @@
+/* Ensure onboarding page root is white even if inline styles set another background */
+:global(.min-h-screen) {
+  background: #ffffff !important;
+}
+
+/* Container: remove large colored page block, keep centared layout */
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
-  background: var(--accent-color); /* Pastel background */
-  border-radius: 1rem;
-  min-height: 100vh;
+  background: transparent; /* let page background (white) show through */
+  border-radius: 0; /* keep page edge flush */
+  min-height: auto;
+  /* force page-level text to white for onboarding */
+  color: #ffffff !important;
 }
 
+/* Card: pink with white text */
+/* Card: pink with white text */
+/* Card: pink with white text */
 .step {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  background: #fff;
+  background: #ff6fa8; /* pink card */
+  color: #ffffff !important; /* 👈 FIXED! */
   border-radius: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.06), 0 4px 6px -2px rgba(0,0,0,0.03);
   padding: 2rem;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+/* Force form element text inside the card to white (overrides inline styles) */
+.step input,
+.step textarea,
+.step select,
+.step button,
+.step label,
+.step .select-trigger,
+.step .select-value,
+.step .react-select__control {
+  color: #ffffff !important;
 }
 
-.stepTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: var(--text-primary); /* Black text */
-}
-
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.label {
-  font-weight: 500;
-  color: var(--text-primary); /* Black text */
-  font-size: 0.875rem;
-}
-
+/* Inputs / placeholders: keep translucent white backgrounds and white text */
 .input {
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
-  background-color: #fff;
-  color: var(--text-primary); /* Black text */
+  border: 1px solid rgba(255,255,255,0.14);
+  background-color: rgba(255,255,255,0.08);
+  color: #ffffff !important;
   font-size: 1rem;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.input::placeholder {
+  color: rgba(255,255,255,0.75) !important;
+}
+
 .input:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(216, 191, 216, 0.2);
+  border-color: rgba(255,255,255,0.22);
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.03);
 }
 
 .buttonGroup {
@@ -63,7 +72,7 @@
 .slider {
   width: 100%;
   margin: 1rem 0;
-  accent-color: var(--primary-color);
+  accent-color: var(--primary);
 }
 
 .radioGroup {
@@ -77,111 +86,108 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.2s;
+  background: transparent;
+  color: #ffffff !important;
 }
 
 .radioItem:hover {
-  background: var(--accent-color);
-  border-color: var(--primary-color);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.22);
 }
 
 .radioItem input:checked + .radioItem,
 .radioItem:has(input:checked) {
-  background: var(--accent-color);
-  border-color: var(--primary-color);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.28);
   border-width: 2px;
 }
 
 .textarea {
   min-height: 100px;
   resize: vertical;
-  background: #fff;
-  color: var(--text-primary);
+  background: rgba(255,255,255,0.06);
+  color: #ffffff !important;
   border-radius: 0.5rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 0.75rem 1rem;
   font-size: 1rem;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.textarea:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(216, 191, 216, 0.2);
+.textarea::placeholder {
+  color: rgba(255,255,255,0.7) !important;
 }
 
-/* Progress bar styles */
+/* Progress bar — keep inside card and styled for pink card */
 .progressBar {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 0; /* moved inside the card, so tighten spacing */
   position: relative;
+  width: 100%;
 }
 
-.progressStep {
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  background: #e5e7eb;
-  z-index: 2;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.progressStepActive {
-  background: var(--primary-color);
-  transform: scale(1.2);
-}
-
-.progressStepCompleted {
-  background: var(--secondary-color);
+.progressContainer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 1rem 0;
+  gap: 0.5rem;
+  padding: 0 0.25rem;
 }
 
 .progressLine {
-  height: 4px;
-  background: #e5e7eb;
+  height: 6px;
+  background: rgba(255,255,255,0.12);
   flex: 1;
-  margin: 0 0.5rem;
-  border-radius: 2px;
-  position: relative;
+  border-radius: 999px;
   overflow: hidden;
 }
 
 .progressLineActive {
-  background: var(--primary-color);
+  background: #ffffff;
 }
 
-.progressLineCompleted {
-  background: var(--secondary-color);
+/* Make the step dots white on active/completed */
+.progressStep {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.20);
+  z-index: 2;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255,255,255,0.12);
 }
 
-/* Container for the entire progress bar */
-.progressContainer {
-  display: flex;
-  align-items: center;
-  width: 300px;
-  margin: 0 auto 2rem;
+.progressStepActive,
+.progressStepCompleted {
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: scale(1.15);
 }
 
-/* Button styles to match profile page */
+/* Buttons: primary button uses white fill with pink label, secondary transparent white outline */
 .button {
-  background: var(--primary-color);
-  color: #000;
+  background: #ffffff;
+  color: #ff6fa8;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 700;
   border: none;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.12s ease;
   cursor: pointer;
   font-size: 1rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .button:hover {
-  background: var(--secondary-color);
+  background: color-mix(in srgb, var(--primary-foreground) 90%, transparent);
+  transform: translateY(-2px);
 }
 
 .button:disabled {
@@ -191,8 +197,8 @@
 
 .buttonSecondary {
   background: transparent;
-  color: var(--text-primary);
-  border: 1px solid #d1d5db;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 500;
@@ -202,6 +208,11 @@
 }
 
 .buttonSecondary:hover {
-  background: #f9fafb;
-  border-color: var(--primary-color);
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.22);
+}
+
+/* small adjustments: ensure headings inside card are white */
+.step h1, .step h2, .step h3, .step h4 {
+  color: #ffffff !important;
 }

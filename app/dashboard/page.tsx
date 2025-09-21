@@ -105,14 +105,14 @@ export default function DashboardPage() {
               <p className={styles.cardDescription}>Manage your personal information.</p>
             </Link>
 
-            <Link href="/resources" className={styles.card}>
+            <Link href="/community" className={styles.card}>
               <div className={styles.iconPurple}>
                 <span className={`${styles.materialIcon} material-symbols-outlined`} style={{ color: "rgb(124, 58, 237)" }}>
-                  bookmarks
+                  groups
                 </span>
               </div>
-              <h3 className={styles.cardTitle}>Resources</h3>
-              <p className={styles.cardDescription}>Access helpful articles and tools.</p>
+              <h3 className={styles.cardTitle}>Community</h3>
+              <p className={styles.cardDescription}>Connect with others and share experiences.</p>
             </Link>
 
             <Link href="/journal" className={styles.card}>

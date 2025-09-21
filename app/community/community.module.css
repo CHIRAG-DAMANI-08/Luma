@@ -16,12 +16,16 @@
   font-size: 2.5rem;
   font-weight: 700;
   color: #000;
+  background: linear-gradient(135deg, #ef4399 0%, #7a6fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .subtitle {
   margin-top: 0.5rem;
   font-size: 1.125rem;
-  color: #333;
+  color: #666;
 }
 
 .mainGrid {
@@ -47,35 +51,116 @@
 .postCard {
   background-color: #fff;
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: box-shadow 0.3s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
   color: #000;
+  border: 1px solid rgba(239, 67, 153, 0.1);
 }
 
 .postCard:hover {
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.03);
+  transform: translateY(-2px);
 }
 
+/* Form Styles - Improved */
 .formCard {
   background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  padding: 3000;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px -5px rgba(239, 67, 153, 0.15);
+  padding: 1.5rem;
+  border: 1px solid rgba(239, 67, 153, 0.2);
+  position: sticky;
+  top: 2rem;
 }
 
 .formHeader {
-  background: linear-gradient(to right, #ef4399, #f7a8d0);
+  background: linear-gradient(135deg, #ef4399 0%, #7a6fff 100%);
   color: white;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 6px rgba(239, 67, 153, 0.15);
 }
 
-.submitButton {
-  background-color: #ef4399;
-  color: white;
-  transition: background-color 0.2s;
+.formGroup {
+  margin-bottom: 1.25rem;
 }
 
-.submitButton:hover {
-  background-color: #e92e84;
+.formLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(16,24,40,0.06);
+  background: linear-gradient(180deg, #ffffff 0%, #fffafc 100%);
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  transition: box-shadow 180ms ease, transform 120ms ease, border-color 120ms ease;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 6px 18px rgba(16,24,40,0.04);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* softer placeholder */
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: #f0a7c2;
+  opacity: 1;
+}
+
+/* bigger textarea, nicer spacing */
+.formTextarea {
+  min-height: 140px;
+  resize: vertical;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* focus state */
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: rgba(239,67,153,0.55);
+  box-shadow: 0 10px 30px rgba(239,67,153,0.12), inset 0 1px 0 rgba(255,255,255,0.7);
+  transform: translateY(-1px);
+  background: #ffffff;
+}
+
+/* subtle subtle hover affordance */
+.formInput:hover,
+.formTextarea:hover {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.75), 0 8px 22px rgba(16,24,40,0.045);
+}
+
+/* character count style */
+.characterCount {
+  text-align: right;
+  font-size: 0.82rem;
+  color: #8b8b9a;
+  margin-top: 0.35rem;
+}
+
+/* responsive tweak */
+@media (max-width: 480px) {
+  .formTextarea { min-height: 120px; }
+  .formInput, .formTextarea { padding: 0.75rem 0.9rem; border-radius: 10px; }
+}
+
+/* Additional decorative elements */
+.formDivider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(239, 67, 153, 0.2), transparent);
+  margin: 1.5rem 0;
 }

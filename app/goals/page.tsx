@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import styles from "./styles.module.css";
 import { User } from "lucide-react";
+import ReminderModal from "@/components/ReminderModal";
 
 // Toast component
 const Toast = ({ message, onClose }: { message: string; onClose: () => void }) => {
@@ -308,8 +309,14 @@ export default function GoalsPage() {
           </div>
         </div>
         <div className={styles.goalActions}>
-          <button className={styles.actionBtn}>
-            <BellRing size={16} /> Set Reminder
+          <button
+            className={styles.actionBtn}
+            onClick={() =>
+              openReminderModal({ id: goal.id as number, text: goal.text })
+            }
+            aria-label={`Set reminder for ${goal.text}`}
+          >
+            ⏰ Set Reminder
           </button>
           <button className={styles.actionBtn}>
             <Smile size={16} /> Link to Mood
@@ -392,6 +399,34 @@ export default function GoalsPage() {
     }
   }, [refreshTrigger]);
   
+  // reminder modal state & handlers
+  const [reminderOpen, setReminderOpen] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState<{ id: number; text: string } | null>(null);
+
+  const openReminderModal = (goal: { id: number; text: string }) => {
+    setSelectedGoal(goal);
+    setReminderOpen(true);
+  };
+
+  const closeReminderModal = () => {
+    setSelectedGoal(null);
+    setReminderOpen(false);
+  };
+
+  const handleReminderSet = (payload: {
+    goal: string;
+    time: string;
+    frequency: string;
+    message: string;
+    addToCalendar: boolean;
+  }) => {
+    // keep existing behaviour: show toast / persist as needed
+    console.log("Reminder set:", payload);
+    // Example: integrate with your toast code if present
+    // setToastMessage(`Reminder set for "${payload.goal}" — ${payload.frequency} @ ${payload.time}`);
+    // setShowToast(true);
+  };
+
   return (
     <div className={styles.designRoot}>
       {/* Toast notification */}
@@ -629,6 +664,14 @@ export default function GoalsPage() {
           </div>
         </div>
       )}
+
+      {/* Render the modal once at page root */}
+      <ReminderModal
+        isOpen={reminderOpen}
+        onClose={closeReminderModal}
+        goal={selectedGoal}
+        onSet={handleReminderSet}
+      />
     </div>
   );
 }

@@ -68,10 +68,62 @@ const ChatInterface = () => {
 
   // NEW: RAG chat state
   const [conversationHistory, setConversationHistory] = useState<{ role: string; text: string }[]>([]);
+  const [sessions, setSessions] = useState<{ id: string; title: string }[]>([]); // State for sessions
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null); // State for active session
   const [message, setMessage] = useState("");
   const [isSaving] = useState(true);
   const [status, setStatus] = useState("Type or record a message to get started.");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        const response = await fetch('/api/chat');
+        if (response.ok) {
+          const data = await response.json();
+          setSessions(data);
+        } else {
+          console.error('Failed to fetch chat sessions');
+        }
+      } catch (error) {
+        console.error('Error fetching chat sessions:', error);
+      }
+    };
+
+    fetchSessions();
+  }, []);
+
+  const handleNewChat = () => {
+    setConversationHistory([]);
+    setActiveSessionId(null);
+    setMessage("");
+    setStatus("Type or record a message to get started.");
+  };
+
+  const handleSessionClick = async (sessionId: string) => {
+    setIsLoading(true);
+    setConversationHistory([]); // Explicitly clear previous conversation
+    setActiveSessionId(sessionId); // Set active session immediately for better UX
+    try {
+      const response = await fetch(`/api/chat/${sessionId}`);
+      if (response.ok) {
+        const data = await response.json();
+        // The API returns messages with a 'content' property, but the UI expects 'text'
+        const formattedHistory = data.map((msg: { role: string; content: string }) => ({
+          role: msg.role,
+          text: msg.content,
+        }));
+        setConversationHistory(formattedHistory);
+        setMessage(""); // Clear the input field
+      } else {
+        console.error('Failed to fetch chat session details');
+      }
+    } catch (error) {
+      console.error('Error fetching session details:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Function to handle sending a text message to our RAG API
   const handleTextSend = async (messageText: string) => {
@@ -92,10 +144,10 @@ const ChatInterface = () => {
         message: newUserMessage.text,
         saveToDb: isSaving,
         emotionAnalysis: null, // Send null for emotion analysis on text messages
+        sessionId: activeSessionId, // Send the active session ID
       };
 
       const token = await getToken();
-      console.log("Clerk token:", token);
       
       // Step 2: Call the RAG Pipeline API with the combined payload
       const chatResponse = await fetch('/api/chat', {
@@ -113,6 +165,16 @@ const ChatInterface = () => {
 
       const chatResult = await chatResponse.json();
       setConversationHistory(prev => [...prev, { role: 'model', text: chatResult.result }]);
+      
+      // If this was a new chat, update the session list and set the active ID
+      if (!activeSessionId) {
+        const newSessionId = chatResult.sessionId;
+        setActiveSessionId(newSessionId);
+        // Add the new session to the top of the list for immediate visibility
+        const newTitle = messageText.substring(0, 40) + (messageText.length > 40 ? "..." : "");
+        setSessions(prev => [{ id: newSessionId, title: newTitle }, ...prev]);
+      }
+
       setStatus("Response received.");
 
     } catch (error: unknown) {
@@ -260,7 +322,7 @@ const ChatInterface = () => {
           </div>
 
           <nav className={styles.navSection}>
-            <button className={styles.navButton}>
+            <button className={styles.navButton} onClick={handleNewChat}>
               <MessageSquare size={16} className={styles.navIcon} />
               New support chat
             </button>
@@ -269,6 +331,15 @@ const ChatInterface = () => {
           {/* Recent Chats */}
           <div className={styles.recentChatsSection}>
             <h3 className={styles.sectionTitle}>Recent Conversations</h3>
+            {sessions.map((session) => (
+              <div 
+                key={session.id} 
+                className={styles.navButton} 
+                onClick={() => handleSessionClick(session.id)}
+              >
+                {session.title}
+              </div>
+            ))}
           </div>
 
           {/* Back to Dashboard button pinned to the bottom-right of the sidebar */}

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import styles from "./dashboard.module.css";
+import ProactiveCheckin from "@/components/ProactiveCheckin";
 
 export default function DashboardPage() {
   const { user } = useUser();
@@ -69,26 +70,30 @@ export default function DashboardPage() {
             <p className={styles.welcomeSubtitle}>What would you like to do today?</p>
           </div>
 
-          {/* gradient chat card */}
-          <div className={styles.chatCard}>
-            <div className={styles.chatCardContent}>
-              <div className={styles.chatCardText}>
-                <h3 className={styles.chatCardTitle}>Chat with Luma</h3>
-                <p className={styles.chatCardDescription}>
-                  Your personal AI companion is here to listen and support you. Start a conversation anytime.
-                </p>
-              </div>
+          {/* ProactiveCheckin will now decide whether to show the proactive message or the fallback generic chat card. */}
+          <ProactiveCheckin
+            fallback={
+              <div className={styles.chatCard}>
+                <div className={styles.chatCardContent}>
+                  <div className={styles.chatCardText}>
+                    <h3 className={styles.chatCardTitle}>Chat with Luma</h3>
+                    <p className={styles.chatCardDescription}>
+                      Your personal AI companion is here to listen and support you. Start a conversation anytime.
+                    </p>
+                  </div>
 
-              <Link href="/chat" className={styles.chatButton}>
-                <span>Start Chat</span>
-                <span className={styles.arrowIcon} aria-hidden>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </Link>
-            </div>
-          </div>
+                  <Link href="/chat" className={styles.chatButton}>
+                    <span>Start Chat</span>
+                    <span className={styles.arrowIcon} aria-hidden>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            }
+          />
 
           {/* cards grid - icons use Material Symbols exactly like the reference */}
           <div className={styles.cardGrid}>

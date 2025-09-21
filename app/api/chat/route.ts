@@ -74,22 +74,29 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { message, saveToDb, emotionAnalysis } = body;
+    const { message, saveToDb, emotionAnalysis, sessionId } = body; // sessionId can be null
 
     if (!message) {
       return NextResponse.json({ error: "Missing message" }, { status: 400 });
     }
 
-    // Get or create a chat session
-    let chatSession = await prisma.chatSession.findFirst({
-      where: { userId: dbUser.id, isActive: true },
-    });
+    let chatSession;
 
-    if (!chatSession) {
+    if (sessionId) {
+      // Continue an existing session
+      chatSession = await prisma.chatSession.findUnique({
+        where: { id: sessionId, userId: dbUser.id }, // Ensure user owns the session
+      });
+      if (!chatSession) {
+        return NextResponse.json({ error: "Chat session not found or access denied" }, { status: 404 });
+      }
+    } else {
+      // Create a new session
       chatSession = await prisma.chatSession.create({
         data: {
           userId: dbUser.id,
-          title: "New Chat",
+          // Use the first message as the title, truncated to a reasonable length
+          title: message.substring(0, 40) + (message.length > 40 ? "..." : ""),
         },
       });
     }
@@ -127,8 +134,15 @@ export async function POST(req: NextRequest) {
         conversationContext += "No relevant past conversations found.";
     }
 
+    // Fetch the user's last logged mood
+    const lastMood = await prisma.moodEntry.findFirst({
+      where: { userId: dbUser.id },
+      orderBy: { createdAt: 'desc' },
+    });
+
     const finalPrompt = `
       **Persona**: You are a compassionate and conversational friend to the user.
+      **User's Last Logged Mood**: ${lastMood ? lastMood.mood : "Not available."}
       **Emotion Analysis**:
         - Dominant Emotion: ${safeEmotionAnalysis.dominantEmotion}
         - Justification: ${safeEmotionAnalysis.justification}
@@ -140,7 +154,11 @@ export async function POST(req: NextRequest) {
       **User's new message**: "${message}"
 
       **Instructions**:
-      - Respond in a warm, empathetic tone, acknowledging the user's emotional state based on the analysis.
+      - Respond in a warm, empathetic tone, acknowledging the user's emotional state based on the analysis and their last logged mood.
+      - Acknowledge the user's last logged mood empathetically without directly quoting them word-for-word.
+      - Paraphrase or gently summarize their feelings before guiding the conversation forward. 
+      - Respond based on both the user’s current emotional state and their last logged mood.
+       - If there is a difference, gently check in to see if things have improved or changed.
       - Use the conversation history to provide a contextually relevant and coherent response.
       - Guide the conversation forward with open-ended, non-leading questions.
       - Do not simply repeat or rephrase what the user has said.
@@ -180,7 +198,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({ result: geminiResponse }, { headers: { 'Content-Type': 'application/json' } });
+    return NextResponse.json({ result: geminiResponse, sessionId: chatSession.id }, { headers: { 'Content-Type': 'application/json' } });
   } catch (error) {
     console.error("Error in chat API:", error);
     return NextResponse.json({ error: "Failed to process chat request." }, { status: 500, headers: { 'Content-Type': 'application/json' } });

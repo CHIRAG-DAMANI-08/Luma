@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@chroma-core/default-embed": "^0.1.8",
+    "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/express": "^1.7.31",
     "@clerk/nextjs": "^6.32.0",
     "@elevenlabs/client": "^0.6.1",

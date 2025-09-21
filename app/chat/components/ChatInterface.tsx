@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Search, Send, MessageSquare, Mic, X, AudioWaveform } from "lucide-react";
 import { useUser, UserButton, useAuth } from "@clerk/nextjs";
 import styles from './styles.module.css';
-import { useConversation } from "@11labs/react";
+import { useConversation } from "@elevenlabs/react";
 import { useRouter } from "next/navigation";
 
 interface Message {

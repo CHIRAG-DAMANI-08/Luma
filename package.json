@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && next build"
+    "vercel-build": "prisma generate && next build",
+    "build:no-functions": "next build || true && echo SKIP_FUNCTIONS"
   },
   "dependencies": {
     "@11labs/react": "^0.2.0",
